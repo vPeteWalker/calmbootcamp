@@ -1,7 +1,7 @@
 .. _calm_day2:
 
 ---------------------------------
-Calm: Day 2 Operations (Optional)
+Calm: Day 2 Operations
 ---------------------------------
 
 Overview
