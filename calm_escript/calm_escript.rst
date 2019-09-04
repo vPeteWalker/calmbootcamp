@@ -1,7 +1,7 @@
 *Script Provided Below*.. _calm_escript:
 
 -----------------------------------------
-Calm: EScript and Task Library (Optional)
+Calm: EScript and Task Library
 -----------------------------------------
 
 Overview
@@ -195,7 +195,7 @@ In this exercise, we're going to create an additional custom action to make a di
      if resp.ok:
 
       # Cycle through the project "entities", and check if its name matches the current project
-      for project in json.loads(resp.content)['entities']:  
+      for project in json.loads(resp.content)['entities']:
         if project['spec']['name'] == '@@{calm_project_name}@@':
 
           # If there's a default subnet reference, print UUID to set variable and exit success, otherwise error out
