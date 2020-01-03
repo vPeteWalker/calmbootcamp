@@ -95,9 +95,9 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # Path should be relative to the ``_static`` files directory.
 
 html_logo = "NutanixWorkshops.svg"
-
+# https://s3.amazonaws.com/handsonworkshops.prod.media/a/a/logo/nutanix-workshops.svg
 html_favicon = "favicon.ico"
-
+# https://s3.amazonaws.com/handsonworkshops.prod.media/a/a/logo/nutanix-favicon.ico
 html_title = ""
 
 html_show_sphinx = False
