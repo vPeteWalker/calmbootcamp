@@ -53,3 +53,5 @@ Suggestions from [How to contribute to Nutanix Workshops](https://nutanix.handso
 
     ```
 - [_build/index.html](./_build/index.html)
+
+- cd calm_marketplace/images; for i in `ls 510*png`; do `git mv $i 5.10/${i:3}` ; done
