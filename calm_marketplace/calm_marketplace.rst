@@ -21,8 +21,7 @@ By default, Calm comes pre-seeded with validated Blueprints for multiple open so
 
 #. Under **Marketplace Blueprints**, select **Mongo**.
 
-.. note::
-The Blueprint description contains key information including licensing, hardware requirements, OS, supported platforms, and limitations.
+.. note:: The Blueprint description contains key information including licensing, hardware requirements, OS, supported platforms, and limitations.
 
 #. Select the **Calm** project from the right-hand side drop down and Click **Publish**.
 

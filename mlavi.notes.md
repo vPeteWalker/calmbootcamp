@@ -29,6 +29,8 @@ Suggestions from [How to contribute to Nutanix Workshops](https://nutanix.handso
           texlive-latex-extra texlive-fonts-recommended texlive-generic-extra latexmk sphinx-doc
 
         update-alternatives: using /usr/share/docutils/scripts/python3/rst-buildhtml to provide /usr/bin/rst-buildhtml (rst-buildhtml) in auto mode
+- https://www.sphinx-doc.org/en/master/usage/configuration.html
+- https://docs.python-guide.org/dev/virtualenvs/
 
 ## Execute
 
@@ -37,7 +39,7 @@ Suggestions from [How to contribute to Nutanix Workshops](https://nutanix.handso
       # git forked upstream https://github.com/jncox/calmbootcamp
       ghq clone mlavi/calmbootcamp
       ghq-look calmbootcamp
-      pipenv install sphinx sphinxcontrib-fulltoc sphinx-bootstrap-theme sphinx_fontawesome
+      pipenv--three install sphinx sphinxcontrib-fulltoc sphinx-bootstrap-theme sphinx_fontawesome
       git checkout -B hybridcloudeng
 
 - Author:
@@ -55,3 +57,18 @@ Suggestions from [How to contribute to Nutanix Workshops](https://nutanix.handso
 - [_build/index.html](./_build/index.html)
 
 - cd calm_marketplace/images; for i in `ls 510*png`; do `git mv $i 5.10/${i:3}` ; done
+- pipenv install --dev watchdog
+  - https://github.com/gorakhargosh/watchdog
+
+        watchmedo shell-command --pattern='Vagrantfile;*rb' --command='vagrant provision; echo' --recursive
+
+        PAGE=x watchmedo shell-command --pattern='*.md' --command='landslide --relative --embed --quiet $PAGE.md --destination $PAGE.html' --recursive &
+
+        set PAGE filename ; watchmedo shell-command --pattern='*.md' --command='landslide --relative --embed --quiet $PAGE.md \
+         --destination $PAGE.html' --recursive &
+
+        watchmedo shell-command --pattern="*.md" --command="landslide --relative --embed --quiet devops-demystified.md --destination devops-demystified.html" &
+  - `watchmedo shell-command --help`
+    - watchmedo shell-command --recursive \
+      --ignore-patterns='_build' --patterns='*rst' \
+      --command='echo "-- Event: ${watch_event_type}: ${watch_src_path}" ; make html && firefox _build/index.html'
