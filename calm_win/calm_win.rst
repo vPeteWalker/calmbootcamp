@@ -9,7 +9,8 @@ Calm: Windows Workloads
 Overview
 ++++++++
 
-**In this exercise you will explore the basics of working with Windows workloads in Nutanix Calm by building and deploying a blueprint that installs and configures a multi-tier** `bug tracker <http://bugnetproject.com/documentation/>`_ **web app using Microsoft SQL Server database & IIS webserver. This lab assumes you are familiar with basic Calm functionality or have completed the** :ref:`calm_linux` **lab.**
+**In this exercise you will explore the basics of working with Windows workloads in Nutanix Calm by building and deploying a blueprint that installs and configures a multi-tier** `bug tracker <http://bugnetproject.com/documentation/>`_ **web app using Microsoft SQL Server database & IIS webserver.
+This lab assumes you are familiar with basic Calm functionality or have completed the** :ref:`calm_linux` **lab.**
 
 Creating the Blueprint
 ++++++++++++++++++++++
@@ -449,7 +450,7 @@ Leveraging the same approach from the :ref:`calm_linux` lab of having multiple w
 (Optional) Managing MSSQL with Era
 ++++++++++++++++++++++++++++++++++
 
-Complete the :ref:`era` lab to gain a basic understanding of Era's capabilities and operation.
+Complete the :term:`era` lab to gain a basic understanding of Era's capabilities and operation.
 
 Log into your BugNET application with the default credentials (**admin/password**) and follow the wizard to create a new project.
 

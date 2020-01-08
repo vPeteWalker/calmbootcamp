@@ -1,15 +1,15 @@
 .. _calm_projects:
 
-------------
+--------------
 Calm: Projects
-------------
+--------------
 
 Overview
 ++++++++
 
 .. note::
 
-  Review :ref:`calm_basics` before proceeding with the lab to familiarize yourself with the UI and common terminology used in Nutanix Calm.
+  Review :ref:`what_is_calm` before proceeding with the lab to familiarize yourself with the UI and common terminology used in Nutanix Calm.
 
   Estimated time to complete: **15 MINUTES**
 

@@ -80,19 +80,14 @@
 
         watchmedo shell-command --pattern="*.md" --command="landslide --relative --embed --quiet devops-demystified.md --destination devops-demystified.html" &
   - `watchmedo shell-command --help`
-    - watchmedo shell-command --recursive \
-      --ignore-patterns='_build' --patterns='*rst' \
-      --command='echo "-- Event: ${watch_event_type}: ${watch_src_path}" ; make html && firefox _build/index.html'
+  -
+
+    watchmedo shell-command --recursive --ignore-patterns='_build' --patterns='*rst' \
+    --command='clear; echo "-- ${watch_src_path}" ; make clean && make html && firefox file:`pwd`/_build/html/`dirname ${watch_src_path}`' &
+    --command='clear; echo "-- Event: ${watch_event_type}: ${watch_src_path}" make clean && make html && firefox _build/index.html' &
+
+# Content Bugs
+#. ncox: calm_day2/calm_day2.rst:19: WARNING: undefined label: taskman (if the link has no caption the label must precede a section header)
+#. ncox: calm_marketplace/calm_marketplace.rst:219: WARNING: image file not readable: calm_marketplace/images/5.10/marketplace_p2_12.png
 
 # Content Warnings
-
-calm_day2/calm_day2.rst:19: WARNING: undefined label: taskman (if the link has no caption the label must precede a section header)
-
-calm_enable/calm_enable.rst:12: WARNING: undefined label: calm_basics (if the link has no caption the label must precede a section header)
-
-calm_projects/calm_projects.rst:12: WARNING: undefined label: calm_basics (if the link has no caption the label must precede a section header)
-
-calm_win/calm_win.rst:452: WARNING: undefined label: era (if the link has no caption the label must precede a section header)
-calm_win/calm_win.rst:274: WARNING: Could not lex literal_block as "powershell". Highlighting skipped.
-calm_win.rst:364: WARNING: Could not lex literal_block as "powershell". Highlighting skipped.
-calm_win/calm_win.rst:397: WARNING: Could not lex literal_block as "powershell". Highlighting skipped.
