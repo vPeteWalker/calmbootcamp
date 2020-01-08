@@ -159,88 +159,18 @@ Adding Services
    | **Delay (in seconds)**       | Increase to **90**        | Increase to **90**        |
    +------------------------------+---------------------------+---------------------------+
 
-   .. code-block:: XML
-     :caption: Sysprep Script
+   Take a minute to review the Sysprep script, a short description follows after.
 
-     <?xml version="1.0" encoding="UTF-8"?>
-     <unattend xmlns="urn:schemas-microsoft-com:unattend">
-       <settings pass="specialize">
-          <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-             <ComputerName>@@{name}@@</ComputerName>
-             <RegisteredOrganization>Nutanix</RegisteredOrganization>
-             <RegisteredOwner>Acropolis</RegisteredOwner>
-             <TimeZone>UTC</TimeZone>
-          </component>
-          <component xmlns="" name="Microsoft-Windows-TerminalServices-LocalSessionManager" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
-             <fDenyTSConnections>false</fDenyTSConnections>
-          </component>
-          <component xmlns="" name="Microsoft-Windows-TerminalServices-RDP-WinStationExtensions" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
-             <UserAuthentication>0</UserAuthentication>
-          </component>
-          <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-             <FirewallGroups>
-                <FirewallGroup wcm:action="add" wcm:keyValue="RemoteDesktop">
-                   <Active>true</Active>
-                   <Profile>all</Profile>
-                   <Group>@FirewallAPI.dll,-28752</Group>
-                </FirewallGroup>
-             </FirewallGroups>
-          </component>
-       </settings>
-       <settings pass="oobeSystem">
-          <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-             <UserAccounts>
-                <AdministratorPassword>
-                   <Value>@@{WIN_VM_CRED.secret}@@</Value>
-                   <PlainText>true</PlainText>
-                </AdministratorPassword>
-             </UserAccounts>
-             <AutoLogon>
-                <Password>
-                   <Value>@@{WIN_VM_CRED.secret}@@</Value>
-                   <PlainText>true</PlainText>
-                </Password>
-                <Enabled>true</Enabled>
-                <Username>Administrator</Username>
-             </AutoLogon>
-             <FirstLogonCommands>
-                <SynchronousCommand wcm:action="add">
-                   <CommandLine>cmd.exe /c netsh firewall add portopening TCP 5985 "Port 5985"</CommandLine>
-                   <Description>Win RM port open</Description>
-                   <Order>1</Order>
-                   <RequiresUserInput>true</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                   <CommandLine>powershell -Command "Enable-PSRemoting -SkipNetworkProfileCheck -Force"</CommandLine>
-                   <Description>Enable PS-Remoting</Description>
-                   <Order>2</Order>
-                   <RequiresUserInput>true</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                   <CommandLine>powershell -Command "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned"</CommandLine>
-                   <Description>Enable Remote-Signing</Description>
-                   <Order>3</Order>
-                   <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-             </FirstLogonCommands>
-             <OOBE>
-                <HideEULAPage>true</HideEULAPage>
-                <SkipMachineOOBE>true</SkipMachineOOBE>
-             </OOBE>
-          </component>
-          <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-             <InputLocale>en-US</InputLocale>
-             <SystemLocale>en-US</SystemLocale>
-             <UILanguageFallback>en-us</UILanguageFallback>
-             <UILanguage>en-US</UILanguage>
-                <UserLocale>en-US</UserLocale>
-          </component>
-       </settings>
-     </unattend>
+   .. literalinclude:: Sysprep-unattended.xml
+      :language: xml
 
-   Take a minute to review the Sysprep script. You can see the VMs being configured to autologon to the local Administrator account using the WIN_VM_CRED password. While this exercise will not join the VMs to an Active Directory domain, you could use either Sysprep or a Package Install task script to automate the joining of a domain.
+   You can see the VMs being configured to autologon to the local Administrator account using the WIN_VM_CRED password. While this exercise will not join the VMs to an Active Directory domain, you could use either Sysprep or a Package Install task script to automate the joining of a domain.
 
-   Additionally, the firewall is configured to allow port 5985 which Calm uses to execute PowerShell scripts against the host. For those familiar with previous versions of Calm, the **Karan** service VM is no longer required to proxy PowerShell commands to the service VMs. Instead, Calm has introduced native support for running PowerShell scripts on remote hosts.
+   Additionally, the firewall is configured to allow port 5985 which Calm uses to execute PowerShell scripts against the host.
+
+   .. note::
+
+      For those familiar with previous versions of Calm, the **Karan** service VM is no longer required to proxy PowerShell commands to the service VMs. Instead, Calm has introduced native support for running PowerShell scripts on remote hosts.
 
    Similar to the Task Manager application in the :ref:`calm_linux` lab, you want to ensure the database is available prior to the IIS web server setup.
 
@@ -267,79 +197,41 @@ For **each** of the following 7 scripts (3 for MSSSQL and 4 for MSIIS), the **Ty
 
    You will add multiple scripts to complete each installation. Working with multiple scripts allows for easier maintenance and application of code across multiple services or blueprints using the Calm **Task Library**. The Task Library allows you to create modularized scripts to achieve certain common functions such as joining a domain or configuring common OS settings.
 
-#. Under **MSSQL > Package Install**, click **+ Task** and fill out the following fields:
+#.  Under **MSSQL > Package Install**, click **+ Task** and fill out the following fields:
 
-   - **Task Name** - InitializeDisk1
-   - **Script** -
+    - **Task Name** - InitializeDisk1
+    -  **Script** -
 
-   .. code-block:: powershell
+    .. literalinclude:: InitializeDisk1.ps1
+       :language: posh
 
-     Get-Disk -Number 1 | Initialize-Disk -ErrorAction SilentlyContinue
-     New-Partition -DiskNumber 1 -UseMaximumSize -AssignDriveLetter -ErrorAction SilentlyContinue | Format-Volume -Confirm:$false
-
-     # Enable CredSSP
-     Enable-WSManCredSSP -Role Server -Force
-
-   The above script simply performs an initialization and format of the extra 100GB VDisk added during VM configuration of the service.
+    The above script simply performs an initialization and format of the extra 100GB VDisk added during VM configuration of the service.
 
 #. Click **Publish To Library > Publish** to save this task script to the Task Library for future use.
 
-#. Repeat clicking **+ Task** to add the remaining two scripts:
+#.  Repeat clicking **+ Task** to add the remaining two scripts:
 
-   - **Task Name** - InstallMSSQL
-   - **Script** -
+    - **Task Name** - InstallMSSQL
+    - **Script** -
 
-   .. code-block:: powershell
+    .. literalinclude:: InstallMSSQL.ps1
+       :language: posh
 
-     $DriveLetter = $(Get-Partition -DiskNumber 1 -PartitionNumber 2 | select DriveLetter -ExpandProperty DriveLetter)
-     $edition = "Standard"
-     $HOSTNAME=$(hostname)
-     $PackageName = "MsSqlServer2014Standard"
-     $Prerequisites = "Net-Framework-Core"
-     $silentArgs = "/IACCEPTSQLSERVERLICENSETERMS /Q /ACTION=install /FEATURES=SQLENGINE,SSMS,ADV_SSMS,CONN,IS,BC,SDK,BOL /SECURITYMODE=sql /SAPWD=`"@@{SQL_CRED.secret}@@`" /ASSYSADMINACCOUNTS=`"@@{SQL_CRED.username}@@`" /SQLSYSADMINACCOUNTS=`"@@{SQL_CRED.username}@@`" /INSTANCEID=MSSQLSERVER /INSTANCENAME=MSSQLSERVER /UPDATEENABLED=False /INDICATEPROGRESS /TCPENABLED=1 /INSTALLSQLDATADIR=`"${DriveLetter}:\Microsoft SQL Server`""
-     $setupDriveLetter = "D:"
-     $setupPath = "$setupDriveLetter\setup.exe"
-     $validExitCodes = @(0)
+    Reviewing the above script you can see it is performing an automated installation of SQL Server, using the SQL_CRED credential details and using the extra 100GB VDisk for the SQL data files.
 
-     if ($Prerequisites){
-     Install-WindowsFeature -IncludeAllSubFeature -ErrorAction Stop $Prerequisites
-     }
+    According to Nutanix best practices for production database deployments, what else would need to be added to the VM/installation?
 
-     Write-Output "Installing $PackageName...."
+    - **Task Name** - FirewallRules
+    - **Script** -
 
-     $install = Start-Process -FilePath $setupPath -ArgumentList $silentArgs -Wait -NoNewWindow -PassThru
-     $install.WaitForExit()
+    .. literalinclude:: FirewallRules.ps1
+       :language: posh
 
-     $exitCode = $install.ExitCode
-     $install.Dispose()
+    Reviewing the above script you can see it is allowing inbound access through the Windows Firewall for key SQL services.
 
-     Write-Output "Command [`"$setupPath`" $silentArgs] exited with `'$exitCode`'."
-     if ($validExitCodes -notcontains $exitCode) {
-     Write-Output "Running [`"$setupPath`" $silentArgs] was not successful. Exit code was '$exitCode'. See log for possible error messages."
-     exit 1
-     }
+    Once complete, your MSSQL service should look like this:
 
-   Reviewing the above script you can see it is performing an automated installation of SQL Server, using the SQL_CRED credential details and using the extra 100GB VDisk for the SQL data files.
-
-   According to Nutanix best practices for production database deployments, what else would need to be added to the VM/installation?
-
-   - **Task Name** - FirewallRules
-   - **Script** -
-
-   .. code-block:: powershell
-
-     New-NetFirewallRule -DisplayName "SQL Server" -Direction Inbound -Protocol TCP -LocalPort 1433 -Action allow
-     New-NetFirewallRule -DisplayName "SQL Admin Connection" -Direction Inbound -Protocol TCP -LocalPort 1434 -Action allow
-     New-NetFirewallRule -DisplayName "SQL Database Management" -Direction Inbound -Protocol UDP -LocalPort 1434 -Action allow
-     New-NetFirewallRule -DisplayName "SQL Service Broker" -Direction Inbound -Protocol TCP -LocalPort 4022 -Action allow
-     New-NetFirewallRule -DisplayName "SQL Debugger/RPC" -Direction Inbound -Protocol TCP -LocalPort 135 -Action allow
-     New-NetFirewallRule -DisplayName "SQL Browser" -Direction Inbound -Protocol TCP -LocalPort 2382 -Action allow
-
-   Reviewing the above script you can see it is allowing inbound access through the Windows Firewall for key SQL services.
-
-   Once complete, your MSSQL service should look like this:
-
-   .. figure:: images/mssql_package_install.png
+    .. figure:: images/mssql_package_install.png
 
 #. Select the **MSIIS** service and open the **Package** tab in the **Configuration Panel**.
 
@@ -357,65 +249,35 @@ For **each** of the following 7 scripts (3 for MSSSQL and 4 for MSIIS), the **Ty
 
      The Task Library also gives you the ability to provide variable definitions if there are Calm macros present in the published task.
 
-#. Specify the **Name** and **Credential**, then repeat clicking **+ Task** to add the remaining three scripts:
+#.  Specify the **Name** and **Credential**, then repeat clicking **+ Task** to add the remaining three scripts:
 
-   - **Task Name** - InstallWebPI
-   - **Script** -
+    - **Task Name** - InstallWebPI
+    - **Script** -
 
-   .. code-block:: powershell
+    .. literalinclude:: InstallWebPI.ps1
+       :language: posh
 
-     # Install WPI
-     New-Item c:/msi -Type Directory
-     Invoke-WebRequest 'http://download.microsoft.com/download/C/F/F/CFF3A0B8-99D4-41A2-AE1A-496C08BEB904/WebPlatformInstaller_amd64_en-US.msi' -OutFile c:/msi/WebPlatformInstaller_amd64_en-US.msi
-     Start-Process 'c:/msi/WebPlatformInstaller_amd64_en-US.msi' '/qn' -PassThru | Wait-Process
+    The above script installs the Microsoft Web Platform Installer (WebPI), which is used to download, install, and update components of the Microsoft Web Platform, including Internet Information Services (IIS), IIS Media Platform technologies, SQL Server Express, .NET Framework, and Visual Web Developer.
 
-     Invoke-WebRequest 'https://download.microsoft.com/download/4/B/1/4B1E9B0E-A4F3-4715-B417-31C82302A70A/ENU/x86/SQLSysClrTypes.msi' -OutFile c:/msi/SQLSysClrTypes.msi-x86.msi
-     Start-Process 'c:/msi/SQLSysClrTypes.msi-x86.msi' '/qn' -PassThru | Wait-Process
-     Invoke-WebRequest 'https://download.microsoft.com/download/4/B/1/4B1E9B0E-A4F3-4715-B417-31C82302A70A/ENU/x64/SQLSysClrTypes.msi' -OutFile c:/msi/SQLSysClrTypes.msi-x64.msi
-     Start-Process 'c:/msi/SQLSysClrTypes.msi-x64.msi' '/qn' -PassThru | Wait-Process
+    - **Task Name** - InstallNetFeatures
+    - **Script** -
 
-   The above script installs the Microsoft Web Platform Installer (WebPI), which is used to download, install, and update components of the Microsoft Web Platform, including Internet Information Services (IIS), IIS Media Platform technologies, SQL Server Express, .NET Framework, and Visual Web Developer.
+    .. literalinclude:: InstallNetFeatures.ps1
+       :language: posh
 
-   - **Task Name** - InstallNetFeatures
-   - **Script** -
+    The above script installs .NET Framework 4.5 on the VM.
 
-   .. code-block:: powershell
+    - **Task Name** - InstallBugNetApp
+    - **Script** -
 
-     # Enable Repair via Windows Update
-     $servicing = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\policies\Servicing"
-     New-Item -Path $servicing -Force
-     Set-ItemProperty -Path $servicing -Name RepairContentServerSource -Value 2
+    .. literalinclude:: InstallBugNetApp.ps1
+       :language: posh
 
-     # Install Features
-     Install-WindowsFeature -Name NET-Framework-Core
-     Install-WindowsFeature -Name NET-WCF-Services45 -IncludeAllSubFeature
+    The above script uses the Application Profile variables you defined at the beginning of the exercise to populate the configuration file of the Bug Tracker app. It then leverages WebPI to install the application from the `Microsoft Web App Gallery <https://webgallery.microsoft.com/gallery>`_. With minimal changes, you could leverage many popular applications from the Gallery, including apps for CMS, eCommerce, Wiki, ticketing, and more.
 
-   The above script installs .NET Framework 4.5 on the VM.
+    Once complete, your MSIIS service should look like this:
 
-   - **Task Name** - InstallBugNetApp
-   - **Script** -
-
-   .. code-block:: powershell
-
-     # Create the installation configuration file
-     $configFile = "AppPath[@]Default Web Site/bugnet
-     DbServer[@]@@{MSSQL.address}@@
-     DbName[@]@@{DbName}@@
-     DbUsername[@]@@{DbUsername}@@
-     Database Password[@]@@{DbPassword}@@
-     DbAdminUsername[@]sa
-     DbAdminPassword[@]@@{SQL_CRED.secret}@@"
-
-     echo $configFile >> BugNET0.app
-
-     # Install the application via Web PI
-     WebpiCmd-x64.exe /Install /UseRemoteDatabase /Application:BugNET@BugNET0.app /AcceptEula
-
-   The above script uses the Application Profile variables you defined at the beginning of the exercise to populate the configuration file of the Bug Tracker app. It then leverages WebPI to install the application from the `Microsoft Web App Gallery <https://webgallery.microsoft.com/gallery>`_. With minimal changes, you could leverage many popular applications from the Gallery, including apps for CMS, eCommerce, Wiki, ticketing, and more.
-
-   Once complete, your MSIIS service should look like this:
-
-   .. figure:: images/msiis_package_install.png
+    .. figure:: images/msiis_package_install.png
 
 #. Click **Save**.
 
@@ -446,17 +308,6 @@ Launching the Blueprint
 +++++++++++++++++++++++++++++
 
 Leveraging the same approach from the :ref:`calm_linux` lab of having multiple web server replicas, can you add a CentOS based HAProxy service to this blueprint to allow for load balancing across multiple IIS servers?
-
-(Optional) Managing MSSQL with Era
-++++++++++++++++++++++++++++++++++
-
-Complete the :term:`era` lab to gain a basic understanding of Era's capabilities and operation.
-
-Log into your BugNET application with the default credentials (**admin/password**) and follow the wizard to create a new project.
-
-You have just deployed your production BugNET application and now desire to rapidly deploy multiple dev/test instances using the latest available production data.
-
-Can you build a version of this Blueprint that leverages an Era clone of your SQL Server database?
 
 **Hints**
 

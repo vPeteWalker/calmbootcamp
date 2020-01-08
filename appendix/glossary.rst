@@ -19,8 +19,7 @@ Calm Terms
         A developer role can create additional custom actions (such as a runbook), scale-in and scale-out actions, pre- and post- create actions.
 
     Application
-        A deployment instance of a :term:`blueprint`.
-        A top level Calm menu icon.
+        A deployment instance of a :term:`blueprint`, also a top level Calm menu icon.
 
     Application Profile
         A developer role can bundle and name a set of :term:`blueprint` variables and service creation definitions into a :term:`Application Profile`.
@@ -30,7 +29,7 @@ Calm Terms
     Blueprint
         An application model of :term:`service` topology with orchestrational :term:`dependency` of :term:`action` and :term:`task`,
         a blueprint must contain at least one :term:`service` and default :term:`application profile`.
-        A top level Calm menu icon.
+        Also a top level Calm menu icon.
 
     Brownfield
         A blueprint consisting of imported :term:`existing machine` from a :term:`provider`.
@@ -60,7 +59,7 @@ Calm Terms
 
     Marketplace
         An end-user, self-service portal of published Calm blueprints, controlled by projects and roles, in Prism Central.
-        A top level Calm menu icon.
+        Also a top level Calm menu icon.
 
     Prism Central
         The Nutanix scale-out control plane to manage multiple joined Nutanix clusters and provide
@@ -69,7 +68,7 @@ Calm Terms
     Project
         A combined bundle of users or groups associated with :term:`roles <Role>` who can access :term:`providers <Provider>`
         with resource quotas.
-        A top level Calm menu icon.
+        Also a top level Calm menu icon.
 
     Provider
         An infrastructure host that provides :term`services <service>` with specified show back resource costs.

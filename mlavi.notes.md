@@ -82,9 +82,8 @@
   - `watchmedo shell-command --help`
   -
 
-    watchmedo shell-command --recursive --ignore-patterns='_build' --patterns='*rst' \
-    --command='clear; echo "-- ${watch_src_path}" ; make clean && make html && firefox file:`pwd`/_build/html/`dirname ${watch_src_path}`' &
-    --command='clear; echo "-- Event: ${watch_event_type}: ${watch_src_path}" make clean && make html && firefox _build/index.html' &
+    watchmedo shell-command --wait --recursive --ignore-patterns='_build' --patterns='*rst' \
+    --command='clear; date; _FI=${watch_src_path}; echo "-- $_FI" ; make clean && make html && firefox file:`pwd`/_build/html/${_FI%%rst}html' &
 
 # Content Bugs
 #. ncox: calm_day2/calm_day2.rst:19: WARNING: undefined label: taskman (if the link has no caption the label must precede a section header)
