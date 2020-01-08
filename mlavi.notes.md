@@ -72,3 +72,16 @@ Suggestions from [How to contribute to Nutanix Workshops](https://nutanix.handso
     - watchmedo shell-command --recursive \
       --ignore-patterns='_build' --patterns='*rst' \
       --command='echo "-- Event: ${watch_event_type}: ${watch_src_path}" ; make html && firefox _build/index.html'
+
+# Content Warnings
+
+calm_day2/calm_day2.rst:19: WARNING: undefined label: taskman (if the link has no caption the label must precede a section header)
+
+calm_enable/calm_enable.rst:12: WARNING: undefined label: calm_basics (if the link has no caption the label must precede a section header)
+
+calm_projects/calm_projects.rst:12: WARNING: undefined label: calm_basics (if the link has no caption the label must precede a section header)
+
+calm_win/calm_win.rst:452: WARNING: undefined label: era (if the link has no caption the label must precede a section header)
+calm_win/calm_win.rst:274: WARNING: Could not lex literal_block as "powershell". Highlighting skipped.
+calm_win.rst:364: WARNING: Could not lex literal_block as "powershell". Highlighting skipped.
+calm_win/calm_win.rst:397: WARNING: Could not lex literal_block as "powershell". Highlighting skipped.
