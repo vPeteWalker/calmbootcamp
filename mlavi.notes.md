@@ -1,7 +1,17 @@
-Suggestions from [How to contribute to Nutanix Workshops](https://nutanix.handsonworkshops.com/workshops/32805e93-e67f-46b4-9700-a7eb78db4c21/view/)
-- git clone https://github.com/nutanixworkshops/workshop-repo-template
-  - recommend using this [.gitignore](https://s3.amazonaws.com/handsonworkshops.prod.media/ws/32805e93e67f46b49700a7eb78db4c21/d/file/dd1e954b38474309acca60229d80acb6/.gitignore)
-- https://docutils.sourceforge.io/docs/user/rst/quickref.html
+# Hands On Workshops: How To
+
+- Suggestions from [How to contribute to Nutanix Workshops](https://nutanix.handsonworkshops.com/workshops/32805e93-e67f-46b4-9700-a7eb78db4c21/view/)
+  - git clone https://github.com/nutanixworkshops/workshop-repo-template
+    - recommend using this [.gitignore](https://s3.amazonaws.com/handsonworkshops.prod.media/ws/32805e93e67f46b49700a7eb78db4c21/d/file/dd1e954b38474309acca60229d80acb6/.gitignore)
+- [Bootcamp Authoring and Publishing Guide](https://drive.google.com/file/d/1-mI4-oCEjNgSmq8hagQHKfY6P1Ja9e0k/view)
+  - https://github.com/shuguet/how Docker container build/live webserver
+
+# RST
+
+- https://docutils.sourceforge.io/docs/user/rst/quickref.html and more from the source.
+- http://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
+  - [Roles](http://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html)
+  - [Directives](http://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html)
 
 ## Atom Plugins
 
@@ -31,6 +41,7 @@ Suggestions from [How to contribute to Nutanix Workshops](https://nutanix.handso
         update-alternatives: using /usr/share/docutils/scripts/python3/rst-buildhtml to provide /usr/bin/rst-buildhtml (rst-buildhtml) in auto mode
 - https://www.sphinx-doc.org/en/master/usage/configuration.html
 - https://docs.python-guide.org/dev/virtualenvs/
+
 
 ## Execute
 
