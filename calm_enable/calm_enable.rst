@@ -9,7 +9,7 @@ Overview
 
 .. note::
 
-  Review :ref:`calm_basics` before proceeding with the lab to familiarize yourself with the UI and common terminology used in Nutanix Calm.
+  Review :ref:`what_is_calm` before proceeding with the lab to familiarize yourself with the UI and common terminology used in Nutanix Calm.
 
   Estimated time to complete: **10 MINUTES**
 
@@ -28,17 +28,17 @@ Calm is built into Prism Central and requires no additional appliances or consol
 
 #. Click **Enable**.
 
-.. figure:: images/510enable1.png
+.. figure:: images/5.10/enable1.png
 
 #. Select **Enable App Management** and click **Save**.
 
 .. note:: Nutanix Calm is a separately licensed product that can be used with Acropolis Starter, Pro, or Ultimate editions. Each Prism Central instance can manage up to 25 VMs for free before additional licensing is required.
 
-.. figure:: images/510enable2.png
+.. figure:: images/5.10/enable2.png
 
 #. You should get verification that Calm is enabling, which will take 5 to 10 minutes.
 
-.. figure:: images/510enable3.png
+.. figure:: images/5.10/enable3.png
 
 Adding Active Directory
 +++++++++++++++++++++++
@@ -47,11 +47,11 @@ While we're waiting for Calm to enable, we'll add an Active Directory server.  W
 
 #. Click the **Gear Icon** and then **Authentication**.
 
-.. figure:: images/510enable4.png
+.. figure:: images/5.10/enable4.png
 
 #. In the pop up, click **New Directory**.
 
-.. figure:: images/510enable5.png
+.. figure:: images/5.10/enable5.png
 
 #. Fill out the following fields and click **Save**:
 
@@ -63,8 +63,8 @@ While we're waiting for Calm to enable, we'll add an Active Directory server.  W
 - **Username** - Administrator@ntnxlab.local
 - **Password** - nutanix/4u
 
-.. figure:: images/510enable6.png
+.. figure:: images/5.10/enable6.png
 
 #. Refresh the browser and select **Calm** from the navigation bar.  If Calm is still enabling, wait another minute, and try again.
 
-.. figure:: images/510enable7.png
+.. figure:: images/5.10/enable7.png

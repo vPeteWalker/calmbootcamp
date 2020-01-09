@@ -2,7 +2,7 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    =
+SPHINXOPTS    = -j auto -n -a
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = NutanixLabs
 SOURCEDIR     = .
@@ -11,6 +11,9 @@ BUILDDIR      = _build
 # Put it first so that "make" without argument is like "make help".
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+clean:
+	rm --recursive --force --verbose $(BUILDDIR) && mkdir $(BUILDDIR) || true
 
 .PHONY: help Makefile
 
