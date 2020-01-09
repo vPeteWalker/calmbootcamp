@@ -1,8 +1,8 @@
-.. _calm_linux:
+.. _calm_iaas:
 
----------------------
-Calm: Linux Workloads
----------------------
+---------------------------------
+Calm: Infrastructure as a Service
+---------------------------------
 
 *The estimated time to complete this lab is ?? minutes.*
 
@@ -131,7 +131,7 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
      .. note::
         Take note of the "@@{vm_password}@@" text.  In Calm the "@@{" and "}@@" characters represent a macro.  At runtime, Calm will automatically "patch" or substitute in the proper value(s) when it encounters a macro.  A macro could represent a system defined value, a VM property, or (as it does in this case) a runtime variable.  Later in this lab we'll create a runtime variable with the name "vm_password".
 
-   - **Disks** - A disk is the storage of the VM / Infrastructure that we're deploying.  It could be based on a pre-existing image (as it will in our case), and/or it could be based on a blank disk to enable the VM to consume additional storage.  For instance, a Microsoft SQL server may need its base OS disk, a separate SQL Server binary disk, separate database data file disks, separate TempDB disks, and a separate logging disk.  In our case we're going to have a single disk, based on a pre-existing image.
+   - **Disks** - A disk is the storage of the VM or infrastructure that we're deploying.  It could be based on a pre-existing image (as it will in our case), and/or it could be based on a blank disk to enable the VM to consume additional storage.  For instance, a Microsoft SQL server may need its base OS disk, a separate SQL Server binary disk, separate database data file disks, separate TempDB disks, and a separate logging disk.  In our case we're going to have a single disk, based on a pre-existing image.
 
      - **Type** - The type of disk, this can be left as default (**DISK**).
      - **Bus Type** - The bus type of the disk, this can be left as default (**SCSI**).
@@ -146,7 +146,7 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
 
          CentOS 7 VM Configuration - Disks
 
-     .. figure:: images/10_windows_5.png
+     .. figure:: images/11_windows_5.png
          :width: 400px
          :align: center
          :alt: Windows 2016 VM Configuration - Disks
@@ -157,8 +157,41 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
 
    - **vGPUs** - Whether or not the VM needs a virtual graphical processing unit.  We'll leave the default of none.
 
-   - **Categories** - Categories span several different products and solutions within the Nutanix portfolio.  They enable you to set security policies, protection policies, alert policies, and playbooks.  Simply choose the categories corresponding to the workload, and all of these policies will automatically be applied.
+   - **Categories** - Categories span several different products and solutions within the Nutanix portfolio.  They enable you to set security policies, protection policies, alert policies, and playbooks.  Simply choose the categories corresponding to the workload, and all of these policies will automatically be applied.  In this lab however, we're going to leave this field **blank**.
 
+   .. figure:: images/12_boot_gpu_cat.png
+       :width: 400px
+       :align: center
+       :alt: VM Configuration - Boot Configuration, vGPUs, and Categories
+
+       VM Configuration - Boot Configuration, vGPUs, and Categories
+
+   - **NICs** - Network adapters allow communication to and from your virtual machine.  We'll be adding a single NIC by clicking the **blue plus**, and then selecting **Primary** in the dropdown.
+
+   .. figure:: images/13_vm_nic.png
+       :width: 400px
+       :align: center
+       :alt: VM Configuration - NICs
+
+       VM Configuration - NICs
+
+   - **Serial Ports** - Whether or not the VM needs a virtual serial port.  We'll leave the default of none.
+
+   .. figure:: images/14_serial.png
+       :width: 400px
+       :align: center
+       :alt: VM Configuration - Serial Ports
+
+       VM Configuration - Serial Ports
+
+#. At the bottom of the page, click the blue **Save** button.  It is expected to have a single error about an incorrect macro due to our Guest Customization containing "vm_password".  If you have additional errors, please be sure to resolve them before continuing to the next section.
+
+   .. figure:: images/15_error.png
+       :width: 400px
+       :align: center
+       :alt: Blueprint Save - Error
+
+       Blueprint Save - Error
 
 
 Defining Variables
@@ -189,509 +222,6 @@ Variables can be used in scripts executed against objects using the **@@{variabl
 
 #. Click **Save**.
 
-Adding a Downloadable Image
-+++++++++++++++++++++++++++
-
-VMs in AHV can be deployed based on a disk image. With Calm, you can select a Downloadable Image via a URI. During the application deployment, Prism Central will automatically download and create the image specified. If an image with the same URI already exists on the cluster, it will skip the download and use the local image instead.
-
-#. From the top toolbar, click **Configuration > Downloadable Image Configuration** :fa:`plus-circle` and fill out the following fields:
-
-   - **Package Name** - CentOS_7_Cloud
-   - **Description** - CentOS 7 Cloud Image
-   - **Image Name** - CentOS_7_Cloud
-   - **Image Type** - Disk Image
-   - **Architecture** - X86_64
-   - **Source URI** - http://download.nutanix.com/calm/CentOS-7-x86_64-GenericCloud.qcow2
-   - **Product Name** - CentOS
-   - **Product Version** - 7
-
-   .. note::
-      This Generic Cloud image is the same that's used for the majority of the Nutanix Pre-Seeded Application Blueprints.
-
-   .. figure:: images/6.png
-
-#. Click **Save**, and then **Back**.
-
-Creating Services
-+++++++++++++++++
-
-Services are the virtual machine instances, existing machines or bare-metal machines, that you can provision and configure by using Nutanix Calm.
-
-In this exercise you will create the database, webserver, and load balancer services that comprise your application.
-
-Creating the Database Service
-.............................
-
-#. In **Application Overview > Services**, click :fa:`plus-circle` to add a new Service.
-
-   By default, the Application Overview is located in the lower right-hand corner of the Blueprint Editor and is used to create and manage Blueprint layers such as Services, Application Profiles, and Actions.
-
-   .. figure:: images/7.png
-
-   Note **Service1** appears in the **Workspace** and the **Configuration Pane** reflects the configuration of the selected Service.
-
-#. Fill out the following fields:
-
-   - **Service Name** - MySQL
-   - **Name** - MySQLAHV
-
-   .. note::
-      This defines the name of the substrate within Calm. Names can only contain alphanumeric characters, spaces, and underscores.
-
-   - **Cloud** - Nutanix
-   - **OS** - Linux
-   - **VM Name** - @@{User_initials}@@-MYSQL-@@{calm_array_index}@@-@@{calm_time}@@
-
-   .. note::
-
-     This will use the Runtime **User_initials** variable you previously provided to prepend the VM name with your initials. It will also use built-in macros to provide the array index (for scale out services) and a time stamp.
-
-   - **Image** - CentOS_7_Cloud
-   - **Device Type** - Disk
-   - **Device Bus** - SCSI
-   - Select **Bootable**
-   - **vCPUs** - 2
-   - **Cores per vCPU** - 1
-   - **Memory (GiB)** - 4
-   - Select **Guest Customization**
-
-     - **Type** - Cloud-init
-     - **Script** -
-
-       .. code-block:: bash
-
-         #cloud-config
-         users:
-           - name: centos
-             ssh-authorized-keys:
-               - @@{CENTOS.public_key}@@
-             sudo: ['ALL=(ALL) NOPASSWD:ALL']
-
-       .. note::
-
-         When using an SSH Private Key Credential, Calm is able to decode that private key into the matching public key, and makes the decoded value accessable via the @@{Credential_Name.public_key}@@ macro. Cloud-Init is then leveraged to populate the SSH public key value as an authorized key, allowing for the corresponding private key to be used to authenticate to the host.
-
-   - Select :fa:`plus-circle` under **Network Adapters (NICs)**
-   - **NIC 1** - Primary
-   - **Credential** - CENTOS
-
-#. Click **Save**.
-
-   .. note::
-
-     If errors or warnings are presented after saving the blueprint, hover over the icon in the top toolbar to see a list of issues. Resolve any issues and **Save** the blueprint again.
-
-     .. figure:: images/8.png
-
-   Now that you have completed the deployment details for the VM associated with the service, the next step is to tell Calm how the application will be installed on the VM.
-
-#. With the **MySQL** service icon selected in the Workspace pane, scroll to the top of the **Configuration Panel**, and select the **Package** tab.
-
-   The Package is the configuration and application(s) installed on the Service, and is typically accomplished by executing a script on the Service VM.
-
-#. Specify **MySQL_PACKAGE** as the **Package Name** and click **Configure install**.
-
-   - **Package Name** - MYSQL_PACKAGE
-
-   .. figure:: images/9.png
-
-   Note the **Package install** field that appears on the MySQL service in the Workspace pane.
-
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel** to define the script that Calm will remotely execute on the MySQL Service VM:
-
-   - **Task Name** - Install_sql
-   - **Type** - Execute
-   - **Script Type** - Shell
-   - **Credential** - CENTOS
-   - **Script** -
-
-     .. code-block:: bash
-
-       #!/bin/bash
-       set -ex
-
-       sudo yum install -y "http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm"
-       sudo yum update -y
-       sudo setenforce 0
-       sudo sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
-       sudo systemctl stop firewalld || true
-       sudo systemctl disable firewalld || true
-       sudo yum install -y mysql-community-server.x86_64
-
-       sudo /bin/systemctl start mysqld
-       sudo /bin/systemctl enable mysqld
-
-       #Mysql secure installation
-       mysql -u root<<-EOF
-
-       UPDATE mysql.user SET Password=PASSWORD('@@{Mysql_password}@@') WHERE User='@@{Mysql_user}@@';
-       DELETE FROM mysql.user WHERE User='@@{Mysql_user}@@' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-       DELETE FROM mysql.user WHERE User='';
-       DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%';
-
-       FLUSH PRIVILEGES;
-       EOF
-
-       mysql -u @@{Mysql_user}@@ -p@@{Mysql_password}@@ <<-EOF
-       CREATE DATABASE @@{Database_name}@@;
-       GRANT ALL PRIVILEGES ON homestead.* TO '@@{Database_name}@@'@'%' identified by 'secret';
-
-       FLUSH PRIVILEGES;
-       EOF
-
-   .. figure:: images/10.png
-
-   .. note::
-      You can click the **Pop Out** icon on the script field for a larger window to view/edit scripts.
-
-   Reviewing the script you can see the package will install MySQL, configure the credentials and create a database based on the variables specified earlier in the exercise.
-
-#. Select the **MySQL** service icon in the Workspace pane again, select the **Package** tab in the **Configuration Panel**.
-
-#. Click **Configure uninstall**.
-
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel**:
-
-   - **Task Name** - Uninstall_sql
-   - **Type** - Execute
-   - **Script Type** - Shell
-   - **Credential** - CENTOS
-   - **Script** -
-
-     .. code-block:: bash
-
-       #!/bin/bash
-       echo "Goodbye!"
-
-   .. figure:: images/11.png
-
-   .. note::
-      The uninstall script can be used for removing packages, updating network services like DHCP and DNS, removing entries from Active Directory, etc. It is not being used for this simple example.
-
-#. Click **Save**. You will be prompted with specific errors if there are validation issues such as missing fields or unacceptable characters.
-
-Creating the Web Server Service
-................................
-
-You will now follow similar steps to define a web server service.
-
-#. In **Application Overview > Services**, add an additional service.
-
-#. Select the new service and fill out the following **VM** fields in the **Configuration Panel**:
-
-   - **Service Name** - WebServer
-   - **Name** - WebServerAHV
-   - **Cloud** - Nutanix
-   - **OS** - Linux
-   - **VM Name** - @@{User_initials}@@-WebServer-@@{calm_array_index}@@
-   - **Image** - CentOS_7_Cloud
-   - **Device Type** - Disk
-   - **Device Bus** - SCSI
-   - Select **Bootable**
-   - **vCPUs** - 2
-   - **Cores per vCPU** - 1
-   - **Memory (GiB)** - 4
-   - Select **Guest Customization**
-
-     - **Type** - Cloud-init
-     - **Script** -
-
-       .. code-block:: bash
-
-         #cloud-config
-         users:
-           - name: centos
-             ssh-authorized-keys:
-               - @@{CENTOS.public_key}@@
-             sudo: ['ALL=(ALL) NOPASSWD:ALL']
-
-   - Select :fa:`plus-circle` under **Network Adapters (NICs)**
-   - **NIC 1** - Primary
-   - **Credential** - CENTOS
-
-#. Select the **Package** tab.
-
-#. Specify a **Package Name** and click **Configure install**.
-
-   - **Package Name** - WebServer_PACKAGE
-
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel**:
-
-   - **Name Task** - Install_WebServer
-   - **Type** - Execute
-   - **Script Type** - Shell
-   - **Credential** - CENTOS
-   - **Script** -
-
-     .. code-block:: bash
-
-       #!/bin/bash
-       set -ex
-
-       sudo yum update -y
-       sudo yum -y install epel-release
-       sudo setenforce 0
-       sudo sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
-       sudo systemctl stop firewalld || true
-       sudo systemctl disable firewalld || true
-       sudo rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
-       sudo yum update -y
-       sudo yum install -y nginx php56w-fpm php56w-cli php56w-mcrypt php56w-mysql php56w-mbstring php56w-dom git unzip
-
-       sudo mkdir -p /var/www/laravel
-       echo "server {
-        listen 80 default_server;
-        listen [::]:80 default_server ipv6only=on;
-       root /var/www/laravel/public/;
-        index index.php index.html index.htm;
-       location / {
-        try_files \$uri \$uri/ /index.php?\$query_string;
-        }
-        # pass the PHP scripts to FastCGI server listening on /var/run/php5-fpm.sock
-        location ~ \.php$ {
-        try_files \$uri /index.php =404;
-        fastcgi_split_path_info ^(.+\.php)(/.+)\$;
-        fastcgi_pass 127.0.0.1:9000;
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-        include fastcgi_params;
-        }
-       }" | sudo tee /etc/nginx/conf.d/laravel.conf
-       sudo sed -i 's/80 default_server/80/g' /etc/nginx/nginx.conf
-       if `grep "cgi.fix_pathinfo" /etc/php.ini` ; then
-        sudo sed -i 's/cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /etc/php.ini
-       else
-        sudo sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /etc/php.ini
-       fi
-
-       sudo systemctl enable php-fpm
-       sudo systemctl enable nginx
-       sudo systemctl restart php-fpm
-       sudo systemctl restart nginx
-
-       if [ ! -e /usr/local/bin/composer ]
-       then
-        curl -sS https://getcomposer.org/installer | php
-        sudo mv composer.phar /usr/local/bin/composer
-        sudo chmod +x /usr/local/bin/composer
-       fi
-
-       sudo git clone https://github.com/ideadevice/quickstart-basic.git /var/www/laravel
-       sudo sed -i 's/DB_HOST=.*/DB_HOST=@@{MySQL.address}@@/' /var/www/laravel/.env
-
-       sudo su - -c "cd /var/www/laravel; composer install"
-       if [ "@@{calm_array_index}@@" == "0" ]; then
-        sudo su - -c "cd /var/www/laravel; php artisan migrate"
-       fi
-
-       sudo chown -R nginx:nginx /var/www/laravel
-       sudo chmod -R 777 /var/www/laravel/
-       sudo systemctl restart nginx
-
-   This script installs PHP and Nginx to create a web server, and then a Laravel based web application.
-   It then configures the web application settings, including updating the **DB_HOST** with the MySQL IP address, accessed via the **@@{MySQL.address}@@** macro.
-
-#. Select the **Package** tab and click **Configure uninstall**.
-
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel**:
-
-   - **Name Task** - Uninstall_WebServer
-   - **Type** - Execute
-   - **Script Type** - Shell
-   - **Credential** - CENTOS
-   - **Script** -
-
-     .. code-block:: bash
-
-       #!/bin/bash
-       set -ex
-
-       sudo rm -rf /var/www/laravel
-       sudo yum erase -y nginx
-
-   For many applications it is common to need to scale out a given service, such as the web tier in order to handle more concurrent users. Calm makes it simple to turn deploy an array containing multiple copies of a given service.
-
-#. With the **WebServer** service icon selected in the Workspace pane, scroll to the top of the **Configuration Panel**, and select the **Service** tab.
-
-#. Under **Deployment Config > Number of Replicas**, increase the **Min** value from 1 to 2 and the **Max** value from 1 to 4.
-
-   .. figure:: images/12.png
-
-   This change will provision a minimum of 2 WebServer VMs for each deployment of the application, and allow the array to grow up to a total of 4 WebServer VMs.
-
-   .. note::
-
-     Scaling an application in and out will require additional scripting so that the application understands how to leverage the additional VMs.
-
-#. Click **Save**.
-
-.. _haproxyinstall:
-
-Creating the Load Balancer Service
-..................................
-
-To take advantage of a scale out web tier, your application needs to be able to load balance connections across multiple web server VMs. HAProxy is a free, open source TCP/HTTP load balancer used to distribute workloads across multiple servers. It can be used anywhere from small, simple deployments to large web-scale environments such as GitHub, Instagram, and Twitter.
-
-#. In **Application Overview > Services**, add an additional service.
-
-#. Select the new service and fill out the following **VM** fields in the **Configuration Panel**:
-
-   - **Service Name** - HAProxy
-   - **Name** - HAProxyAHV
-   - **Cloud** - Nutanix
-   - **OS** - Linux
-   - **VM Name** - @@{User_initials}@@-HAProxy-@@{calm_array_index}@@
-   - **Image** - CentOS\_7\_Cloud
-   - **Device Type** - Disk
-   - **Device Bus** - SCSI
-   - Select **Bootable**
-   - **vCPUs** - 2
-   - **Cores per vCPU** - 1
-   - **Memory (GiB)** - 4
-   - Select **Guest Customization**
-
-     - **Type** - Cloud-init
-     - **Script** -
-
-       .. code-block:: bash
-
-         #cloud-config
-         users:
-           - name: centos
-             ssh-authorized-keys:
-               - @@{CENTOS.public_key}@@
-             sudo: ['ALL=(ALL) NOPASSWD:ALL']
-
-   - Select :fa:`plus-circle` under **Network Adapters (NICs)**
-   - **NIC 1** - Primary
-   - **Credential** - CENTOS
-
-#. Select the **Package** tab.
-
-#. Specify a **Package Name** and click **Configure install**.
-
-   - **Package Name** - HAProxy_PACKAGE
-
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel**:
-
-   - **Name Task** - Install_HAProxy
-   - **Type** - Execute
-   - **Script Type** - Shell
-   - **Credential** - CENTOS
-   - **Script** -
-
-     .. code-block:: bash
-
-       #!/bin/bash
-       set -ex
-
-       sudo yum update -y
-       sudo yum install -y haproxy
-       sudo setenforce 0
-       sudo sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
-       sudo systemctl stop firewalld || true
-       sudo systemctl disable firewalld || true
-
-       echo "global
-        log 127.0.0.1 local0
-        log 127.0.0.1 local1 notice
-        maxconn 4096
-        quiet
-        user haproxy
-        group haproxy
-       defaults
-        log global
-        mode http
-        retries 3
-        timeout client 50s
-        timeout connect 5s
-        timeout server 50s
-        option dontlognull
-        option httplog
-        option redispatch
-        balance roundrobin
-       # Set up application listeners here.
-       listen admin
-        bind 127.0.0.1:22002
-        mode http
-        stats uri /
-       frontend http
-        maxconn 2000
-        bind 0.0.0.0:80
-        default_backend servers-http
-       backend servers-http" | sudo tee /etc/haproxy/haproxy.cfg
-
-       hosts=$(echo "@@{WebServer.address}@@" | tr "," "\n")
-       port=80
-
-       for host in $hosts
-         do echo " server host-${host} ${host}:${port} weight 1 maxconn 100 check" | sudo tee -a /etc/haproxy/haproxy.cfg
-       done
-
-       sudo systemctl daemon-reload
-       sudo systemctl enable haproxy
-       sudo systemctl restart haproxy
-
-   Note the use of the @@{WebServer.address}@@ macro in the script above. The macro returns a comma delimited list of all IPs of the VMs within that service. The script then uses the `tr <https://www.geeksforgeeks.org/tr-command-unixlinux-examples/>`_ command to replace commas with carriage returns. The result is an array, **$hosts**, containing strings of all WebServer IP addresses. Those addresses are then each added to the **HAProxy** configuration file.
-
-#. Select the **Package** tab and click **Configure uninstall**.
-
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel**:
-
-   - **Name Task** - Uninstall_HAProxy
-   - **Type** - Execute
-   - **Script Type** - Shell
-   - **Credential** - CENTOS
-   - **Script** -
-
-     .. code-block:: bash
-
-       #!/bin/bash
-       set -ex
-
-       sudo
-       yum -y erase haproxy
-
-#. Click **Save**.
-
-Adding Dependencies
-+++++++++++++++++++
-
-As our application will require the database to be running before the web server starts, our Blueprint requires a dependency to enforce this ordering.  There are a couple of ways to do this, one of which you've already done without likely realizing it.
-
-#. In the **Application Overview > Application Profile** section, expand the **Default** Application Profile and click the **Create** Action.
-
-   .. figure:: images/13.png
-
-   Take note of the **Orange Orchestration Edge** going from the **MySQL Start** task to the **WebServer Package Install** task. This edge was automatically created by Calm due to the **@@{MySQL.address}@@** macro reference in the **WebServer Package Install** task. Since the system needs to know the IP Address of the MySQL service prior to being able to proceed with the WebServer Install task, Calm intelligently creates the orchestration edge for you. This requires the MySQL service to be started prior to moving on to the WebServer Install task.
-
-#. Return to the **HAProxy Package Install** task, why are orchestration edges automatically created between the WebServer and HAProxy services?
-
-#. Next, select the **Stop** Profile Action.
-
-   Note that lack of orchestration edges between services when stopping an application. Why might issuing shutdown commands to all services within the application simultaneously create an issue?
-
-#. Click on each Profile Action to take note of the current presence (or lack thereof) of the orchestration edges.
-
-   .. figure:: images/14.png
-
-   To resolve this, you'll manually define a dependencies between services.
-
-#. Select the **WebServer** Service and click the **Create Dependency** icon that appears above the Service icon, and then click on the **MySQL** service.
-
-   .. figure:: images/15.png
-
-#. This represents that the **WebServer** service "depends" upon the **MySQL** service, meaning the **MySQL** service will start before, and stop after, the **WebServer** service.
-
-#. Now create a dependency for the **HAProxy** service to depend on the **WebServer** service.
-
-#. Click **Save**.
-
-#. Re-visit the Profile Actions and confirm the edges now properly reflect the dependencies between the services, as shown below:
-
-   .. figure:: images/16.png
-
-   Drawing the white dependency arrows will cause Calm to create orchestration edges for all **System Defined Profile Actions** (Create, Start, Restart, Stop, Delete, and Soft Delete).
 
 Launching and Managing the Application
 ++++++++++++++++++++++++++++++++++++++
