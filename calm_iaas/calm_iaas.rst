@@ -197,34 +197,72 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
 Defining Variables
 ++++++++++++++++++
 
-Variables allow extensibility of Blueprints, meaning a single Blueprint can be used for multiple purposes and environments depending on the configuration of its variables.
-Variables can either be static values saved as part of the Blueprint or they can be specified at **Runtime** (when the Blueprint is launched).  Variables are specific to a given **Application Profile**, which is the platform on which the blueprint will be deployed. For example, a blueprint capable of being deployed to both AHV and AWS would have 2 Application Profiles. Each profile could have individual variables and VM configurations.
+Variables allow extensibility of Blueprints, meaning a single Blueprint can be used for multiple purposes and environments depending on the configuration of its variables.  Variables can either be static values saved as part of the Blueprint or they can be specified at **Runtime** (when the Blueprint is launched), as they will in this case.
 
-By default, variables are stored as a **String** and are visible in the Configuration Pane. Setting a variable as **Secret** will mask the value and is ideal for variables such as passwords. In addition to the String and Secret options, there are Integer, Multi-line String, Date, Time, and Date Time **Data Types**, and more advanced **Input Types**, however these are outside the scope of this lab.
+By default, variables are stored as a **String** and in a Single VM blueprint can be accessed by clicking the **App variables** button near the top. Setting a variable as **Secret** will mask the value and is ideal for variables such as passwords. In addition to the String and Secret options, there are Integer, Multi-line String, Date, Time, and Date Time **Data Types**, and more advanced **Input Types**, however these are outside the scope of this lab.
 
-Variables can be used in scripts executed against objects using the **@@{variable_name}@@** construct. Calm will expand and replace the variable with the appropriate value before sending to the VM.
+Variables can be used in scripts executed against objects using the **@@{variable_name}@@** construct (called a macro). Calm will expand and replace the variable with the appropriate value before sending to the VM.
 
-#. In the **Configuration Pane** on the right side of the Blueprint Editor, under **Variables**, add the following variables (**Runtime** is specified by toggling the **Running Man** icon to Blue):
+#. Click the **App variables** button along the top pane to bring up the variables menu.
 
-   +------------------------+-------------------------------+------------+-------------+
-   | **Variable Name**      | **Data Type** | **Value**     | **Secret** | **Runtime** |
-   +------------------------+-------------------------------+------------+-------------+
-   | User_initials          | String        | xyz           |            |      X      |
-   +------------------------+-------------------------------+------------+-------------+
-   | Mysql\_user            | String        | root          |            |             |
-   +------------------------+-------------------------------+------------+-------------+
-   | Mysql\_password        | String        | nutanix/4u    |     X      |             |
-   +------------------------+-------------------------------+------------+-------------+
-   | Database\_name         | String        | homestead     |            |             |
-   +------------------------+-------------------------------+------------+-------------+
+#. In the pop-up that appears, you should see a note stating you currently do not have any variables.  Go ahead and click the blue **+ Add Variable** button to add our variable, and fill out the following fields.
 
-   .. figure:: images/5.png
+   - Along the **left column**, click the **running man** icon to mark this variable as **runtime**.
+   - In the main pane, set the variable **Name** as **vm_password**.  This name *must* exactly match (including case) the value within our macro from our Guest Customization script, otherwise we'll continue to get an error when we save.
+   - Leave the **Data Type** as the default, **String**.  Feel free to investigate the other options, however discussion about them are outside the scope of this lab.
+   - For the **Value**, leave blank, as we want the end users to specify their own VM password.
+   - **Enable** the **Secret** checkbox, as we do not want this password to be visible.
+   - Click the **Show Additional Options** link at the bottom.
+   - Leave the **Label** field blank.
+   - In the **Description** field, paste in either **Create a password for the user "centos"** or **Create a password for the user "Administrator"**, depending on your OS choice.
+   - **Enable** the **Mark this variable mandatory** checkbox.  This will ensure that the end user enters a password, which is required since we did not provide default value.
+   - Leave the other two checkboxes unselected.
 
-#. Click **Save**.
+     .. figure:: images/16_variable.png
+         :width: 400px
+         :align: center
+         :alt: Variable - vm_password
+
+         Variable - vm_password
+
+#. Scroll to the bottom, and click the blue **Done** button.
+
+#. Click **Save**.  It is expected to receive a **Warning** stating that the value of our secret variable is empty.  This is needed as there is not way to determine the value of a secret once you save the blueprint, so this warning alerts a user in the event they accidentally left it blank.  Warnings do not prevent users from launching or publishing the blueprint.  If you receive any other warning, or a red error, please resolve the issue before continuing on.
+
+   .. figure:: images/17_warning.png
+       :width: 400px
+       :align: center
+       :alt: Blueprint Save - Warning
+
+       Blueprint Save - Warning
 
 
-Launching and Managing the Application
-++++++++++++++++++++++++++++++++++++++
+Launching the Blueprint
++++++++++++++++++++++++
+
+Now that our blueprint is complete, take note of the buttons to the right of the save button:
+
+   - **Publish** - this allows us to request to publish the blueprint into the Marketplace.  Blueprints have a 1:1 mapping to a Project, meaning only other users who are members of our own Project will have the ability to launch this blueprint.  Publishing blueprints to the Marketplace allows an administrator to assign any number of Projects to the Marketplace blueprint, which enables self service for any number of end users desired.
+   - **Download** - this option downloads the blueprint in a JSON format, which can be checked into source control, or uploaded into another Calm instance.
+   - **Launch** - this launches our blueprint and deploys our application and/or infrastructur.
+
+Go ahead and click the **Launch** button.  On the launch page that appears, **Name** your application with your initials and a unique number.  Click **Create**, where you'll be redirectly the application page.
+
+   .. figure:: images/18_launch.png
+       :width: 400px
+       :align: center
+       :alt: Blueprint Launch
+
+       Blueprint Launch
+
+Managing your Application
++++++++++++++++++++++++++
+
+Wait several minutes for your application to change from a **Provisioning** state to a **Running** state.  If it instead changes to an **Error** state, navigate to the **Audit** tab, and expand the **Create** action to start troubleshooting your issue.
+
+Once your application is in a **Running** state navigate around the UI:
+
+   - The **Overview** tab gives you a =====
 
 #. From the upper toolbar in the Blueprint Editor, click **Launch**.
 
