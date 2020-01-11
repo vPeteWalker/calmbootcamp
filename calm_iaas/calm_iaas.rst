@@ -41,14 +41,12 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
    - **Project** - *Initials*-Calm
 
    .. figure:: images/2_centos_1.png
-       :width: 400px
        :align: center
        :alt: CentOS 7 Blueprint Settings
 
        CentOS 7 Blueprint Settings
 
    .. figure:: images/3_windows_1.png
-       :width: 400px
        :align: center
        :alt: Windows 2016 Blueprint Settings
 
@@ -63,14 +61,12 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
    - **Operating System** - The type of OS we're deploying.  It should be left as Linux if you're using CentOS 7, or changed to Windows if using Windows 2016. 
 
    .. figure:: images/4_centos_2.png
-       :width: 400px
        :align: center
        :alt: CentOS 7 VM Details
 
        CentOS 7 VM Details
 
    .. figure:: images/5_windows_2.png
-       :width: 400px
        :align: center
        :alt: Windows 2016 VM Details
 
@@ -88,14 +84,12 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
      - **Memory (GiB)** - the amount of RAM to assign to the VM.  For **CentOS**, enter **4**.  For **Windows**, enter **6**.  Mark this field as **runtime**.
 
      .. figure:: images/6_centos_3.png
-         :width: 400px
          :align: center
          :alt: CentOS 7 VM Configuration - General Configuration
 
          CentOS 7 VM Configuration - General Configuration
 
      .. figure:: images/7_windows_3.png
-         :width: 400px
          :align: center
          :alt: Windows 2016 VM Configuration - General Configuration
 
@@ -110,7 +104,6 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
           :language: bash
 
        .. figure:: images/8_centos_4.png
-           :width: 400px
            :align: center
            :alt: CentOS 7 Cloud Init
 
@@ -122,7 +115,6 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
           :language: xml
 
        .. figure:: images/9_windows_4.png
-           :width: 400px
            :align: center
            :alt: Windows 2016 Sysprep
 
@@ -140,14 +132,12 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
      - **Bootable** - Whether or not this particular disk is bootable.  A minimum of one disk *must* be bootable.  In our case, leave it **enabled**.
 
      .. figure:: images/10_centos_5.png
-         :width: 400px
          :align: center
          :alt: CentOS 7 VM Configuration - Disks
 
          CentOS 7 VM Configuration - Disks
 
      .. figure:: images/11_windows_5.png
-         :width: 400px
          :align: center
          :alt: Windows 2016 VM Configuration - Disks
 
@@ -160,7 +150,6 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
    - **Categories** - Categories span several different products and solutions within the Nutanix portfolio.  They enable you to set security policies, protection policies, alert policies, and playbooks.  Simply choose the categories corresponding to the workload, and all of these policies will automatically be applied.  In this lab however, we're going to leave this field **blank**.
 
    .. figure:: images/12_boot_gpu_cat.png
-       :width: 400px
        :align: center
        :alt: VM Configuration - Boot Configuration, vGPUs, and Categories
 
@@ -169,7 +158,6 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
    - **NICs** - Network adapters allow communication to and from your virtual machine.  We'll be adding a single NIC by clicking the **blue plus**, and then selecting **Primary** in the dropdown.
 
    .. figure:: images/13_vm_nic.png
-       :width: 400px
        :align: center
        :alt: VM Configuration - NICs
 
@@ -178,7 +166,6 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
    - **Serial Ports** - Whether or not the VM needs a virtual serial port.  We'll leave the default of none.
 
    .. figure:: images/14_serial.png
-       :width: 400px
        :align: center
        :alt: VM Configuration - Serial Ports
 
@@ -187,7 +174,6 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
 #. At the bottom of the page, click the blue **Save** button.  It is expected to have a single error about an incorrect macro due to our Guest Customization containing "vm_password".  If you have additional errors, please be sure to resolve them before continuing to the next section.
 
    .. figure:: images/15_error.png
-       :width: 400px
        :align: center
        :alt: Blueprint Save - Error
 
@@ -219,7 +205,6 @@ Variables can be used in scripts executed against objects using the **@@{variabl
    - Leave the other two checkboxes unselected.
 
      .. figure:: images/16_variable.png
-         :width: 400px
          :align: center
          :alt: Variable - vm_password
 
@@ -230,7 +215,6 @@ Variables can be used in scripts executed against objects using the **@@{variabl
 #. Click **Save**.  It is expected to receive a **Warning** stating that the value of our secret variable is empty.  This is needed as there is not way to determine the value of a secret once you save the blueprint, so this warning alerts a user in the event they accidentally left it blank.  Warnings do not prevent users from launching or publishing the blueprint.  If you receive any other warning, or a red error, please resolve the issue before continuing on.
 
    .. figure:: images/17_warning.png
-       :width: 400px
        :align: center
        :alt: Blueprint Save - Warning
 
@@ -242,81 +226,120 @@ Launching the Blueprint
 
 Now that our blueprint is complete, take note of the buttons to the right of the save button:
 
-   - **Publish** - this allows us to request to publish the blueprint into the Marketplace.  Blueprints have a 1:1 mapping to a Project, meaning only other users who are members of our own Project will have the ability to launch this blueprint.  Publishing blueprints to the Marketplace allows an administrator to assign any number of Projects to the Marketplace blueprint, which enables self service for any number of end users desired.
-   - **Download** - this option downloads the blueprint in a JSON format, which can be checked into source control, or uploaded into another Calm instance.
-   - **Launch** - this launches our blueprint and deploys our application and/or infrastructur.
+- **Publish** - this allows us to request to publish the blueprint into the Marketplace.  Blueprints have a 1:1 mapping to a Project, meaning only other users who are members of our own Project will have the ability to launch this blueprint.  Publishing blueprints to the Marketplace allows an administrator to assign any number of Projects to the Marketplace blueprint, which enables self service for any number of end users desired.
+- **Download** - this option downloads the blueprint in a JSON format, which can be checked into source control, or uploaded into another Calm instance.
+- **Launch** - this launches our blueprint and deploys our application and/or infrastructur.
 
 Go ahead and click the **Launch** button.  On the launch page that appears, **Name** your application with your initials and a unique number.  Click **Create**, where you'll be redirectly the application page.
 
-   .. figure:: images/18_launch.png
-       :width: 400px
-       :align: center
-       :alt: Blueprint Launch
+.. figure:: images/18_launch.png
+    :align: center
+    :alt: Blueprint Launch
 
-       Blueprint Launch
+    Blueprint Launch
+
 
 Managing your Application
 +++++++++++++++++++++++++
 
 Wait several minutes for your application to change from a **Provisioning** state to a **Running** state.  If it instead changes to an **Error** state, navigate to the **Audit** tab, and expand the **Create** action to start troubleshooting your issue.
 
-Once your application is in a **Running** state navigate around the UI:
+Once your application is in a **Running** state, navigate around the five tabs in the UI:
 
-   - The **Overview** tab gives you a =====
+- The **Overview** tab gives you information about any variables specified, the cost incurred (showback can be configured in the Calm Settings), an application summary, and a VM summary.
+- The **Manage** tab allows you to run actions against the application / infrastructure.  This includes basic lifecycle (start, restart, stop, delete), NGT management (install, manage, uninstall), and App Update, which allows for editing of basic VM resources.
+- The **Metrics** tab gives in depth information about CPU, Memory, Storage, and Network utilization.
+- The **Recovery Points** tab lists the history of VM Snapshots, and allows the user to restore the VM to any of these points.
+- The **Audit** tab shows every action run against the application, the time and user that ran a given action, and in depth information on the results of that action, including script output. 
 
-#. From the upper toolbar in the Blueprint Editor, click **Launch**.
+.. figure:: images/19_app_tabs.png
+    :align: center
+    :alt: Application Tabs
 
-#. Specify a unique **Application Name** (e.g. *Initials*\ -CalmLinuxIntro1) and your **User_initials** Runtime variable value for VM naming.
+    Application Tabs
 
-#. Click **Create**.
+Next, view the common VM tasks available in the upper right corner of the UI:
 
-   The **Audit** tab can be used to monitor the deployment of the application.
+- The **Clone** button allows a user to duplicate the existing application into a new app that is manageable separately from the current application.  For a brand new application, this is equivalent to launching the blueprint again.  However, a user may have spent significant time customizing the existing application to suit their specific needs, and would like these changes to be present on the new app.
+- The **Snapshot** button creates a new recovery point of the VM, which allows a user to restore the VM.
+- The **Launch Console** button opens a console window to the VM.
+- The **Update** button allows for the end user to modify basic VM settings (this is equivalent to the **Manage > App Update** action).
+- The **Delete** button deletes the underlying VM and the Calm Application (this is equivalent to the **Manage > App Delete** action).
 
-   Why don't all of the CentOS based services deploy at the same time following the download of the disk image?
+.. figure:: images/20_app_buttons.png
+    :align: center
+    :alt: Application Buttons
 
-#. Once the application reaches a **Running** status, navigate to the **Services** tab and select the **HAProxy** service to determine the IP address of your load balancer.
+    Application Buttons
 
-#. In a new browser tab or window, navigate to \http://<HAProxy-IP>, and verify your Task Manager application is functioning.
+Now that we're familiar with the application page layout, let's modify our application by adding additional memory, but let's do it in a way that we can recover from in case something goes wrong.
 
-   .. note::
+#. Click the **Snapshot** button in the upper right, and in the pop-up that appears, change the name to **before-update-@@{calm_time}@@**, leave the rest as default, and click the blue **Save** button.
 
-     You can also click the link in the Description of the Application.
+   .. figure:: images/21_snapshot.png
+       :align: center
+       :alt: Application Snapshot
 
-   .. figure:: images/17.png
+       Application Snapshot
+
+#. Take note you're re-directed to the **Audit** tab.  Expand the **Snapshot Create** action to view the tasks of the snapshot.  Once complete, navigate to the **Recovery Points** tab, a validate that our new snapshot is listed.
+
+#. Next, click the **Launch Console** button in the upper right, and log in to your VM.  If you chose CentOS as your OS, the username will be **centos**, and for Windows it will be **Administrator**.  The password is what you specified during the blueprint launch.
+
+#. To view the current memory on CentOS, run the command **free -h**.  If you're using Windows, open a **Command Prompt**, and run **systeminfo**.  Take note of the current memory allocated to your VM.
+
+   .. figure:: images/22_centos_memory_before.png
+       :align: center
+       :alt: CentOS Memory - Before Update
+
+       CentOS Memory - Before Update
+
+   .. figure:: images/23_windows_memory_before.png
+       :align: center
+       :alt: Windows Memory - Before Update
+
+       Windows Memory - Before Update
+
+#. Navigate back to the application page of Calm, and click the **Update** button in the upper right.  On the page that appears, increase the **Memory (GiB)** field by 2 GiB (for CentOS it should now be 6 GiB, for Windows, 8 GiB).  Click the blue **Update** button in the lower left.
+
+#. Validate that the memory field has been increased by 2 GiB, and click **Confirm**.
+
+   .. figure:: images/24_centos_confirm.png
+       :align: center
+       :alt: CentOS Memory - Confirm Change
+
+       CentOS Memory - Confirm Change
+
+   .. figure:: images/25_windows_confirm.png
+       :align: center
+       :alt: Windows Memory - Confirm Change
+
+       Windows Memory - Confirm Change
+
+#. Back in the **VM Console**, run the same command from earlier to view the updated memory, and note that it has increased by 2 GiB.
+
+   .. figure:: images/26_centos_memory_after.png
+       :align: center
+       :alt: CentOS Memory - After Update
+
+       CentOS Memory - After Update
+
+   .. figure:: images/27_windows_memory_after.png
+       :align: center
+       :alt: Windows Memory - After Update
+
+       Windows Memory - After Update
 
 Takeaways
 +++++++++
 
-What are the key things you should know about **Nutanix Calm**?
+What are the key things you should know about **Nutanix Calm** and **Single VM Blueprints**?
 
-- Nutanix Calm, as a native component of Prism, is built on and carries forward the benefits of the platform.  The simplicity provided by Acropolis lets Calm focus on applications, rather than trying to mask the complexity of the underlying infrastructure management.
+- Nutanix Calm provides application and infrastructure automation natively within Prism, turning complex, week long ticketing processes, into one-click self service provisioning.
 
-- Calm blueprints are easy to use.  In 60 minutes you went from nothing to a full infrastructure stack deployment.  Because Calm uses standard tools for configuration - bash, PowerShell, Python, etc. - there's no new language to learn and you can immediately apply skills and code you already have.
+- While Multi VM blueprints enable the provisioning and lifecycle management of complex, multi-tiered applications, Single VM blueprints allows IT to provide Infrastructure-as-a-Service for their end users.
 
-- While not as visually impressive, even single VM blueprints can have a massive effect on customers.  One bank in India is using Calm for single-VM deployments, reducing the time to deploy these applications from 3 days to 2 hours.  Remember that many customers have little or no automation today (or the automation they have is complex/hard to understand thus limiting it's adoption).  This means that Calm can help them right now, today, instantly.
-
-- "Multi-Cloud Application Automation and Lifecycle Management" sounds big and scary.  The 'future' sounds amazing, but many operators can't see the path to there.  Listen to what the customer is struggling with today (backups require specialized skills, VM deployment takes a long time, upgrades are hard) and speak to how Calm can help with that; jumping right to the multi-cloud automation story pushes Calm from a "I need this right now" to a "well let's evaluate this later on, once things have quieted down" (and things never truly 'quiet down'.
-
-- The Blueprint Editor provides a simple UI for modeling potentially complex applications.
-
-- Blueprints are tied to SSP Projects which can be used to enforce quotas and role based access control.
-
-- Having a Blueprint install and configure binaries means no longer creating specific images for individual applications. Instead the application can be modified through changes to the Blueprint or installation script, both of which can be stored in source code repositories.
-
-- Variables allow another dimension of customizing an application without having to edit the underlying Blueprint.
-
-- There are multiple ways of authenticating to a VM (keys or passwords), which is dependent upon the source image.
-
-- Application status can be monitored in real time.
-
-- Applications typically span across multiple VMs, each responsible for different services. Calm is capable of automated and orchestrating full applications.
-
-- Dependencies between services can be easily modeled in the Blueprint Editor.
-
-- Users can quickly provision entire application stacks for production or testing for repeatable results without time lost to manual configuration.
-
-- Interested in using Calm for more app lifecycle operations? Check out the :ref:`calm_day2`!
-
+- Common day 2 operations, like snapshotting, restoring, cloning, and updating the infrastructure can all be done by end users directly within Calm.
 
 .. |proj-icon| image:: ../images/projects_icon.png
 .. |mktmgr-icon| image:: ../images/marketplacemanager_icon.png
