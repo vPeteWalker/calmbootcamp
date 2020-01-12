@@ -246,31 +246,31 @@ Wait several minutes for your application to change from a **Provisioning** stat
 
 Once your application is in a **Running** state, navigate around the five tabs in the UI:
 
+   .. figure:: images/19_app_tabs.png
+       :align: center
+       :alt: Application Tabs
+
+       Application Tabs
+
 - The **Overview** tab gives you information about any variables specified, the cost incurred (showback can be configured in the Calm Settings), an application summary, and a VM summary.
 - The **Manage** tab allows you to run actions against the application / infrastructure.  This includes basic lifecycle (start, restart, stop, delete), NGT management (install, manage, uninstall), and App Update, which allows for editing of basic VM resources.
 - The **Metrics** tab gives in depth information about CPU, Memory, Storage, and Network utilization.
 - The **Recovery Points** tab lists the history of VM Snapshots, and allows the user to restore the VM to any of these points.
 - The **Audit** tab shows every action run against the application, the time and user that ran a given action, and in depth information on the results of that action, including script output. 
 
-.. figure:: images/19_app_tabs.png
-    :align: center
-    :alt: Application Tabs
-
-    Application Tabs
-
 Next, view the common VM tasks available in the upper right corner of the UI:
+
+   .. figure:: images/20_app_buttons.png
+       :align: center
+       :alt: Application Buttons
+
+       Application Buttons
 
 - The **Clone** button allows a user to duplicate the existing application into a new app that is manageable separately from the current application.  For a brand new application, this is equivalent to launching the blueprint again.  However, a user may have spent significant time customizing the existing application to suit their specific needs, and would like these changes to be present on the new app.
 - The **Snapshot** button creates a new recovery point of the VM, which allows a user to restore the VM.
 - The **Launch Console** button opens a console window to the VM.
 - The **Update** button allows for the end user to modify basic VM settings (this is equivalent to the **Manage > App Update** action).
 - The **Delete** button deletes the underlying VM and the Calm Application (this is equivalent to the **Manage > App Delete** action).
-
-.. figure:: images/20_app_buttons.png
-    :align: center
-    :alt: Application Buttons
-
-    Application Buttons
 
 Now that we're familiar with the application page layout, let's modify our application by adding additional memory, but let's do it in a way that we can recover from in case something goes wrong.
 
