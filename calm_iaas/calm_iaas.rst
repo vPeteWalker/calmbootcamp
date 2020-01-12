@@ -246,11 +246,11 @@ Wait several minutes for your application to change from a **Provisioning** stat
 
 Once your application is in a **Running** state, navigate around the five tabs in the UI:
 
-   .. figure:: images/19_app_tabs.png
-       :align: center
-       :alt: Application Tabs
+.. figure:: images/19_app_tabs.png
+    :align: center
+    :alt: Application Tabs
 
-       Application Tabs
+    Application Tabs
 
 - The **Overview** tab gives you information about any variables specified, the cost incurred (showback can be configured in the Calm Settings), an application summary, and a VM summary.
 - The **Manage** tab allows you to run actions against the application / infrastructure.  This includes basic lifecycle (start, restart, stop, delete), NGT management (install, manage, uninstall), and App Update, which allows for editing of basic VM resources.
@@ -260,11 +260,11 @@ Once your application is in a **Running** state, navigate around the five tabs i
 
 Next, view the common VM tasks available in the upper right corner of the UI:
 
-   .. figure:: images/20_app_buttons.png
-       :align: center
-       :alt: Application Buttons
+.. figure:: images/20_app_buttons.png
+    :align: center
+    :alt: Application Buttons
 
-       Application Buttons
+    Application Buttons
 
 - The **Clone** button allows a user to duplicate the existing application into a new app that is manageable separately from the current application.  For a brand new application, this is equivalent to launching the blueprint again.  However, a user may have spent significant time customizing the existing application to suit their specific needs, and would like these changes to be present on the new app.
 - The **Snapshot** button creates a new recovery point of the VM, which allows a user to restore the VM.
