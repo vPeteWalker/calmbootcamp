@@ -9,24 +9,24 @@ Calm: Infrastructure as a Service
 Overview
 ++++++++
 
-Nutanix Calm allows you to seamlessly select, provision, and manage your business applications across your infrastructure for both the private and public clouds. Nutanix Calm provides App lifecycle, monitoring and remediation to manage your heterogeneous infrastructure, for example, VMs or bare-metal servers. Nutanix Calm supports multiple platforms so that you can use the single self-service and automation interface to manage all your infrastructure.
+Nutanix Calm allows you to seamlessly select, provision, and manage your business applications across your infrastructure for both the private and public clouds. Nutanix Calm provides App lifecycle, monitoring and remediation to manage your heterogeneous infrastructure, for example, VMs or bare-metal servers. Nutanix Calm supports multiple platforms so that you can use a single self-service and automation interface to manage all your infrastructure.
 
 Infrastructure-as-a-Service (IaaS) is defined as the ability to quickly provide compute resources, on-demand through a self service portal.  While many customers utilize Nutanix Calm to orchestrate complex, multi-tiered applications, a significant portion of customers also utilize Calm to provide basic IaaS for their end users.
 
-**In this lab you will create a "Single VM Blueprint" based on either a Linux or Microsoft OS, ??and publish the blueprint into the marketplace to provide IaaS for end users.??**
+**In this lab you'll create a "Single VM Blueprint" based on either a Linux or Microsoft OS, launch the blueprint, and manage the resulting application.**
 
 Creating a Single VM Blueprint
 ++++++++++++++++++++++++++++++
 
-A blueprint is the framework for every application or piece of infrastructure that you model by using Nutanix Calm.  While complex, multi-tiered applications utilize the "Multi VM/Pod Blueprint", the streamlined interface of the "Single VM Blueprint" is conducive for IaaS use cases.  You can model each type of infrastructure your company utilizes (for instance Windows, CentOS, and/or Ubuntu) in a Single VM blueprint, and end users can repeatedly launch the blueprint to create infrastructure on demand.  The resulting infrastructure (which is still referred to as an "application" within Calm), can then be managed throughout its entire lifecycle within Calm, including managing Nutanix Guest Tools (NGT), modifying resources, snapshotting, and cloning.
+A blueprint is the framework for every application or piece of infrastructure that you model by using Nutanix Calm.  While complex, multi-tiered applications utilize the "Multi VM/Pod Blueprint", the streamlined interface of the "Single VM Blueprint" is conducive for IaaS use cases.  You can model each type of infrastructure your company utilizes (for instance Windows, CentOS, and/or Ubuntu) in a Single VM blueprint, and end users can repeatedly launch the blueprint to create infrastructure on demand.  The resulting infrastructure (which is still referred to as an "application"), can then be managed throughout its entire lifecycle within Calm, including managing Nutanix Guest Tools (NGT), modifying resources, snapshotting, and cloning.
 
-In this lab, you have the option of either creating a CentOS 7 Linux server, or Windows 2016 server.  It is recommended to start with the OS that you're most familiar with.  If desired, repeat the lab with the other OS after you've completed it first.
+In this lab, you have the option of either creating a **CentOS 7** Linux server, or **Windows 2016** server.  It is recommended to start with the OS that you're most familiar with.  If desired, repeat the lab with the other OS after you've completed it with your first OS.
 
 #. In **Prism Central**, select :fa:`bars` **> Services > Calm**.
 
    .. figure:: images/1_access_calm.png
 
-#. Select |blueprints| **Blueprints** in the left hand toolbar to view and manage Calm bleuprints.
+#. Select |blueprints| **Blueprints** in the left hand toolbar to view and manage Calm blueprints.
 
    .. note::
 
@@ -96,7 +96,7 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
          Windows 2016 VM Configuration - General Configuration
 
 
-   - **Guest Customization** - Guest customization allows for the modification of certain settings at boot.  Linux OSes use "Cloud Init", while Windows OSes use "Sysprep".  Select the **Guest Customization**, and then paste in one of the two following scripts, depending on your OS.
+   - **Guest Customization** - Guest customization allows for the modification of certain settings at boot.  Linux OSes use "Cloud Init", while Windows OSes use "Sysprep".  Select the **Guest Customization**, and then paste in one of the two following scripts, depending on your OS.  If you're deploying Windows, leave the Install Type (Prepared) and Join a Domain (un-checked) as defaults.
 
      - CentOS 7
 
@@ -123,7 +123,7 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
      .. note::
         Take note of the "@@{vm_password}@@" text.  In Calm the "@@{" and "}@@" characters represent a macro.  At runtime, Calm will automatically "patch" or substitute in the proper value(s) when it encounters a macro.  A macro could represent a system defined value, a VM property, or (as it does in this case) a runtime variable.  Later in this lab we'll create a runtime variable with the name "vm_password".
 
-   - **Disks** - A disk is the storage of the VM or infrastructure that we're deploying.  It could be based on a pre-existing image (as it will in our case), and/or it could be based on a blank disk to enable the VM to consume additional storage.  For instance, a Microsoft SQL server may need its base OS disk, a separate SQL Server binary disk, separate database data file disks, separate TempDB disks, and a separate logging disk.  In our case we're going to have a single disk, based on a pre-existing image.
+   - **Disks** - A disk is the storage of the VM or infrastructure that we're deploying.  It could be based on a pre-existing image (as it will in our case), or it could be based on a blank disk to enable the VM to consume additional storage.  For instance, a Microsoft SQL server may need its base OS disk, a separate SQL Server binary disk, separate database data file disks, separate TempDB disks, and a separate logging disk.  In our case we're going to have a single disk, based on a pre-existing image.
 
      - **Type** - The type of disk, this can be left as default (**DISK**).
      - **Bus Type** - The bus type of the disk, this can be left as default (**SCSI**).
@@ -155,7 +155,7 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
 
        VM Configuration - Boot Configuration, vGPUs, and Categories
 
-   - **NICs** - Network adapters allow communication to and from your virtual machine.  We'll be adding a single NIC by clicking the **blue plus**, and then selecting **Primary** in the dropdown.
+   - **NICs** - Network adapters allow communication to and from your virtual machine.  We'll be adding a single NIC by clicking the **blue plus**, then selecting **Primary** in the dropdown, and selecting the **Dynamic** radio button.
 
    .. figure:: images/13_vm_nic.png
        :align: center
@@ -163,7 +163,7 @@ In this lab, you have the option of either creating a CentOS 7 Linux server, or 
 
        VM Configuration - NICs
 
-   - **Serial Ports** - Whether or not the VM needs a virtual serial port.  We'll leave the default of none.
+   - **Serial Ports** - Whether or not the VM needs a virtual serial port.  We'll leave the default of **none**.
 
    .. figure:: images/14_serial.png
        :align: center
@@ -185,7 +185,7 @@ Defining Variables
 
 Variables allow extensibility of Blueprints, meaning a single Blueprint can be used for multiple purposes and environments depending on the configuration of its variables.  Variables can either be static values saved as part of the Blueprint or they can be specified at **Runtime** (when the Blueprint is launched), as they will in this case.
 
-By default, variables are stored as a **String** and in a Single VM blueprint can be accessed by clicking the **App variables** button near the top. Setting a variable as **Secret** will mask the value and is ideal for variables such as passwords. In addition to the String and Secret options, there are Integer, Multi-line String, Date, Time, and Date Time **Data Types**, and more advanced **Input Types**, however these are outside the scope of this lab.
+In a Single VM blueprint, variables can be accessed by clicking the **App variables** button near the top.  By default, variables are stored as a **String**, however additional **Data Types** (Integer, Multi-line String, Date, Time, and Date Time) are all possible.  Any of these data types can be optionally set as **Secret**, which will mask its value and is ideal for variables such as passwords.  There are also more advanced **Input Types** (versus the default **Simple**), however these are outside the scope of this lab.
 
 Variables can be used in scripts executed against objects using the **@@{variable_name}@@** construct (called a macro). Calm will expand and replace the variable with the appropriate value before sending to the VM.
 
@@ -194,7 +194,7 @@ Variables can be used in scripts executed against objects using the **@@{variabl
 #. In the pop-up that appears, you should see a note stating you currently do not have any variables.  Go ahead and click the blue **+ Add Variable** button to add our variable, and fill out the following fields.
 
    - Along the **left column**, click the **running man** icon to mark this variable as **runtime**.
-   - In the main pane, set the variable **Name** as **vm_password**.  This name *must* exactly match (including case) the value within our macro from our Guest Customization script, otherwise we'll continue to get an error when we save.
+   - In the main pane, set the variable **Name** as **vm_password**.  This name must *exactly* match (including case) the value within our macro from our Guest Customization script, otherwise we'll continue to get an error when we save.
    - Leave the **Data Type** as the default, **String**.  Feel free to investigate the other options, however discussion about them are outside the scope of this lab.
    - For the **Value**, leave blank, as we want the end users to specify their own VM password.
    - **Enable** the **Secret** checkbox, as we do not want this password to be visible.
@@ -230,7 +230,7 @@ Now that our blueprint is complete, take note of the buttons to the right of the
 - **Download** - this option downloads the blueprint in a JSON format, which can be checked into source control, or uploaded into another Calm instance.
 - **Launch** - this launches our blueprint and deploys our application and/or infrastructur.
 
-Go ahead and click the **Launch** button.  On the launch page that appears, **Name** your application with your initials and a unique number.  Click **Create**, where you'll be redirectly the application page.
+Go ahead and click the **Launch** button.  On the launch page that appears, **Name** your application with your initials, OS type, and a unique number.  Click **Create**, where you'll be redirectly the application page.
 
 .. figure:: images/18_launch.png
     :align: center
@@ -286,7 +286,7 @@ Now that we're familiar with the application page layout, let's modify our appli
 
 #. Next, click the **Launch Console** button in the upper right, and log in to your VM.  If you chose CentOS as your OS, the username will be **centos**, and for Windows it will be **Administrator**.  The password is what you specified during the blueprint launch.
 
-#. To view the current memory on CentOS, run the command **free -h**.  If you're using Windows, open a **Command Prompt**, and run **systeminfo**.  Take note of the current memory allocated to your VM.
+#. To view the current memory on CentOS, run the command **free -h**.  If you're using Windows, open a **Command Prompt**, and run **systeminfo | findstr Memory**.  Take note of the current memory allocated to your VM.
 
    .. figure:: images/22_centos_memory_before.png
        :align: center
@@ -316,6 +316,8 @@ Now that we're familiar with the application page layout, let's modify our appli
 
        Windows Memory - Confirm Change
 
+#. In the **Audit** tab of Calm, wait for the **App Update** action to complete.
+
 #. Back in the **VM Console**, run the same command from earlier to view the updated memory, and note that it has increased by 2 GiB.
 
    .. figure:: images/26_centos_memory_after.png
@@ -329,6 +331,8 @@ Now that we're familiar with the application page layout, let's modify our appli
        :alt: Windows Memory - After Update
 
        Windows Memory - After Update
+
+If anything went wrong with the VM Update, navigate to the **Recovery Points** tab, click **Restore** on the **before-update** snapshot we took earlier, and click **Confirm** on the pop-up.
 
 Takeaways
 +++++++++
