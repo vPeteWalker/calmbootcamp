@@ -9,7 +9,7 @@ Calm: Linux Workloads
 Overview
 ++++++++
 
-Nutanix Calm allows you to seamlessly select, provision, and manage your business applications across your infrastructure for both the private and public clouds. Nutanix Calm provides App lifecycle, monitoring and remediation to manage your heterogeneous infrastructure, for example, VMs or bare-metal servers. Nutanix Calm supports multiple platforms so that you can use the single self-service and automation interface to manage all your infrastructure.
+Nutanix Calm allows you to seamlessly select, provision, and manage your business applications across your infrastructure for both the private and public clouds. Nutanix Calm provides App lifecycle, monitoring and remediation to manage your heterogeneous infrastructure, for example, VMs or bare-metal servers. Nutanix Calm supports multiple platforms so that you can use a single self-service and automation interface to manage all your infrastructure.
 
 **In this lab you will explore the basics of Nutanix Calm by building and deploying a blueprint that installs and configures a multi-tier Task Manager web app using MySQL, nginix, and HAProxy.**
 
@@ -24,7 +24,7 @@ You can use blueprints to model the applications of various complexities; from s
 
    .. figure:: images/1.png
 
-#. Select |blueprints| **Blueprints** in the left hand toolbar to view and manage Calm bleuprints.
+#. Select |blueprints| **Blueprints** in the left hand toolbar to view and manage Calm blueprints.
 
    .. note::
 
@@ -666,7 +666,7 @@ What are the key things you should know about **Nutanix Calm**?
 
 - The Blueprint Editor provides a simple UI for modeling potentially complex applications.
 
-- Blueprints are tied to SSP Projects which can be used to enforce quotas and role based access control.
+- Blueprints are tied to Projects which can be used to enforce quotas and role based access control.
 
 - Having a Blueprint install and configure binaries means no longer creating specific images for individual applications. Instead the application can be modified through changes to the Blueprint or installation script, both of which can be stored in source code repositories.
 
