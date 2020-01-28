@@ -36,7 +36,7 @@ All other required components are deployed via a Calm blueprint.
 Creating our CI/CD Infrastructure with Nutanix Calm
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Building a CI/CD pipeline generally involves connecting a large number of disparate tools.  To streamline this lab, we'll be deploying many of these tools via a Nutanix Calm blueprint.  We'll first launch the blueprint, and then in the 15 minutes it takes t deploy, we'll cover the blueprint architecture to familiarze ourselves with the tools involved.
+Building a CI/CD pipeline generally involves connecting a large number of disparate tools.  To streamline this lab, we'll be deploying many of these tools via a Nutanix Calm blueprint.  We'll first launch the blueprint, and then in the ~20 minutes it takes to deploy, we'll cover the blueprint architecture to familiarze ourselves with the tools involved.
 
 #. In **Prism Central**, select :fa:`bars` **> Services > Calm**.
 
@@ -80,11 +80,68 @@ In approximate order (approximate as Calm deploys Services in parallel, unless t
 
 .. _kubeconfig: https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/
 
-
+Once your Jenkins_Master and Jenkins_Slave Services have been fully deployed, move on to the next section.
 
 
 Accessing Jenkins
 +++++++++++++++++
+
+Now that our CI/CD Infrastructure has been deployed, we're ready to start configuration of the various components that make up our Pipeline.  First up, is Jenkins.
+
+#. On the **Overview** tab of your Application, **right click** on the **Jenkins** link, and open the page in a new tab.
+
+   .. figure:: images/05_app_overview.png
+       :align: center
+       :alt: Nutanix Calm CI/CD Infrastructure App Overview
+
+#. While still within the Calm Application page, navigate to the **Services** tab, select the **Jenkins_Master** Service, and in the right column, click **Open Terminal**.
+
+   .. figure:: images/06_open_terminal.png
+       :align: center
+       :alt: CI/CD Infrastructure App Open Terminal
+
+#. In the Web SSH Terminal that just opened, run the following command to print out Jenkins' temporary administrator password.
+
+    .. literalinclude:: cat-password.sh
+       :language: bash
+
+#. Double click the result from the previous step's command to copy it to your clipboard.
+
+   .. figure:: images/07_temp_admin_pass.png
+       :align: center
+       :alt: Jenkins Master Temporary Admin Password
+
+#. Change to the **Sign in [Jenkins]** tab that was previously opened.  In the **Administrator password** field, paste in the contents of the previous step, and click **Continue**.
+
+   .. figure:: images/08_unlock_jenkins.png
+       :align: center
+       :alt: Unlock Jenkins
+
+#. On the next page, click the large **Install suggested plugins** button.
+
+   .. figure:: images/09_suggested_plugins.png
+       :align: center
+       :alt: Install Jenkins Suggested Plugins
+
+#. Wait for the suggested plugins to install, after which you'll be re-directed to create the first admin user.  Fill in the following fields, and click **Save and Continue**.
+
+   - **Username** - admin
+   - **Password** - any password of your choice
+   - **Confirm password** - matching password
+   - **Full name** - admin
+   - **Email address** - noreply@nutanix.com
+
+   .. figure:: images/10_create_user.png
+       :align: center
+       :alt: Create Jenkins Admin User
+
+#. On the Instance Configuration page that appears, **leave** the Jenkins URL as **default**, and click **Save and Finish**.
+
+#. Jenkins setup is now complete, but first our Jenkins instance needs to be restarted.  Click **Restart**, and then move on to the next section.
+
+   .. figure:: images/11_restart_jenkins.png
+       :align: center
+       :alt: Restart Jenkins
 
 
 Gitea Webhook Setup
