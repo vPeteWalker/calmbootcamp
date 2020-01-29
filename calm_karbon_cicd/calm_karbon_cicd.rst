@@ -144,8 +144,89 @@ Now that our CI/CD Infrastructure has been deployed, we're ready to start config
        :alt: Restart Jenkins
 
 
+Accessing the Developer Workstation
++++++++++++++++++++++++++++++++++++
+
+Throughout this entire lab, we'll be running a large number of commands from our developer workstation, as it has already been configured with all the necessary software packages, the correct kubeconfig file, and is pointed at our git repository that's stored in Gitea.
+
+To access the developer workstation, you have two options: 1, use the web SSH client as we did for the Jenkins Service, or 2, use your laptop's terminal or PuTTY to SSH into the workstation.  Either option is perfectly valid, however we recommend you stick with whatever you're most comfortable with.  Since we already covered how to use the web SSH client in the previous step, we'll cover SSH'ing in from your laptop here.
+
+#. Back in our Calm application page, navigate to the **Services** tab, and select the **Workstation** Service.  In the right column that appears, **copy** the IP address of the service by clicking the button just to the right of the IP.
+
+   .. figure:: images/12_copy_workstation_ip.png
+       :align: center
+       :alt: CI/CD Infrastructure App Copy Workstation IP
+
+#. In your laptop's terminal, run the following commands (TODO: figure out how we're handling keys) to SSH into your workstation.
+
+    .. literalinclude:: ssh-workstation.sh
+       :language: bash
+
+#. Validate that our kubeconfig and git repo are set up properly by running the following commands.  Your output should be similar to the image below, but with different node names and IPs.
+
+    .. literalinclude:: validate-workstation.sh
+       :language: bash
+
+   .. figure:: images/13_validate_workstation.png
+       :align: center
+       :alt: Validate Workstation Configuration
+
+
 Gitea Webhook Setup
 +++++++++++++++++++
+
+Our next configuration step is to create a webhook in Gitea, which tells Gitea to inform some server (in our case Jenkins) each time there is a new commit.  Many popular git servers have this functionality, including GitHub, GitLab, and Gitea.
+
+#. We'll access our Gitea Service in the same manner as Jenkins, by navigating to the **Overview** tab of our Calm application, right clicking on the **Gitea** link, and opening it in a new tab.
+
+#. It is expected to receive a warning from your browser about the site's security certificate not being trusted by your computer.  This is due to the use of self signed SSL certificates during setup (which is not recommended for production workloads).  Select the **Proceed Anyway** option (exact wording may depend on your browser).
+
+#. On the Gitea homepage, click the **Sign In** button in the upper right.
+
+   .. figure:: images/14_gitea_home.png
+       :align: center
+       :alt: Gitea Homepage
+
+#. Sign in with the following credentials.
+
+   - **Username** - gitadmin
+   - **Password** - your password specified when launching the Calm blueprint
+
+   .. figure:: images/15_gitea_signin.png
+       :align: center
+       :alt: Gitea Sign In
+
+#. On the page that appears, click the **gitadmin/hello-kubernetes** repository link, then **Settings** along the right-hand side, and finally the **Webhooks** tab.
+
+   .. figure:: images/16_repo_settings.png
+       :align: center
+       :alt: Gitea Repository Settings
+
+#. Click the blue **Add Webhook** button, in the list that appears click **Gitea**, and then fill in the following fields.
+
+   - **Target URL** - The output of the **echo $JENKINS_HOOK_URL** command from the previous "Developer Workstation" section, should be of the format **http://<jenkins-ip>:8080/gitea-webhook/post**
+   - **HTTP Method** - Leave the default of **POST**
+   - **POST Content Type** - Leave the default of **application/json**
+   - **Secret** - Leave it blank (Jenkins does not require a secret by default)
+   - **Trigger On** - Leave the default of **Push Events** (any time a user runs "git push" Gitea will send the webhook)
+   - **Branch filter** - Leave the default of * (this means the webhook will be triggered for *any* branch)
+   - **Active** - Leave the Active checkbox **enabled**.
+
+   .. figure:: images/17_gitea_add_webhook.png
+       :align: center
+       :alt: Gitea Add Webhook
+
+#. Click the green **Add Webhook** button.  You should receive a notification that the webhook has been added.
+
+   .. figure:: images/18_gitea_webhook_added.png
+       :align: center
+       :alt: Gitea Webhook Added
+
+#. To validate the webhook is operating as expected, click the **pencil** to the right of the webhook.  Scroll all the way to the bottom of the page, and click the teal **Test Delivery** button.  After a moment, the page should refresh, and there should be a successful test event created.  If the **Response** has a green **200** code, then everything is configured properly.
+
+   .. figure:: images/19_gitea_test_webhook.png
+       :align: center
+       :alt: Gitea Successful Test Webhook
 
 
 Jenkins Credentials Creation
@@ -176,6 +257,10 @@ Automated Application Deployment Through a Git Push
 Takeaways
 +++++++++
 
+
+   .. figure:: images/.png
+       :align: center
+       :alt:
 
 
 .. |proj-icon| image:: ../images/projects_icon.png
