@@ -228,14 +228,96 @@ Our next configuration step is to create a webhook in Gitea, which tells Gitea t
        :align: center
        :alt: Gitea Successful Test Webhook
 
+DockerHub Setup
++++++++++++++++
+
+After a GitHub commit triggers a Jenkins build, and Jenkins successfully builds our new docker image, it needs some place to store the image.  In this lab, we'll be using DockerHub, however there are many free container registries available.
+
+#. First, login to DockerHub_ (or create a free account) and click the **Create Repository** button.
+
+  .. _DockerHub: https://hub.docker.com/
+
+   .. figure:: images/20_dockerhub_create_1.png
+       :align: center
+       :alt: DockerHub Create Repository Button
+
+#. Name the repository **hello-kubernetes**, give it a description of your choice, leave all other fields as default, and click **Create**.
+
+   .. figure:: images/21_dockerhub_create_2.png
+       :align: center
+       :alt: DockerHub Create Repository
+
 
 Jenkins Credentials Creation
 ++++++++++++++++++++++++++++
+
+The first step of our Jenkins Setup is to add our various credentials to Jenkins’ credential store, which gives Jenkins the ability to authenticate to other pieces of our pipeline.  We’ll first add our DockerHub credentials, which allows Jenkins to push images.  **TODO: Validate this statement. In many environments, you would also need to add git credentials for Jenkins to be able to read the repository, however in this particular environment, our Gitea server has our git repository marked as public, so no authentication is necessary to read the repo.**  Lastly, we’ll add our Karbon kubeconfig file to allow Jenkins to deploy our application directly onto our Kubernetes cluster.
+
+#. Log in to your Jenkins server with the credentials you created earlier (you may need to refresh your browser page due to the Jenkins reboot in a previous section).
+
+#. In the Jenkins UI, select **Credentials** along the left, and then in the **Stores scoped to Jenkins** section, select the **global** domain.
+
+   .. figure:: images/22_jenkins_global_creds.png
+       :align: center
+       :alt: Jenkins Global Credentials
+
+#. Click **Add Credentials** along the left column.
+
+   .. figure:: images/23_jenkins_add_creds.png
+       :align: center
+       :alt: Jenkins Add Global Credentials
+
+#. Fill in the following fields to add your DockerHube credentials, and click **OK**.
+
+   - **Kind** - leave as default (**Username with password**)
+   - **Scope** - leave as default (**Global**)
+   - **Username** - your DockerHub username (**not** your email)
+   - **Password** - your DockerHub password
+   - **ID** - leave blank
+   - **Description** - **DockerHub Credentials**
+
+   .. figure:: images/24_jenkins_dockerhub_creds.png
+       :align: center
+       :alt: Jenkins Add DockerHub Credentials
+
+#. Lastly, we’ll need to add our kubeconfig file as a credential to allow Jenkins to deploy our updated application onto our Kubernetes cluster.  In our Workstation CLI, run the following commands  to create a Kubernetes Service Account **jenkins**, and then create a Role Binding which maps our Service Account the the built-in **admin** role. 
+
+    .. literalinclude:: create-sa.sh
+       :language: bash
+
+   .. note::
+
+     We're limiting our jenkins Service Account to a single Kubernetes namespace (default).
+
+#. We'll now replace the token in our existing kubeconfig with the token of our newly generated Service Account, which we can do in one line with the following command.
+
+    .. literalinclude:: create-kubeconfig.sh
+       :language: bash
+
+#. Copy the long output of that command into your buffer, and head back into the Jenkins UI.  Select **Add Credentials** again, fill in the following fields, and click **OK**.
+
+   - **Kind** - **Kubernetes configuration (kubeconfig)**
+   - **Scope** - leave as default (**Global**)
+   - **ID** - leave blank
+   - **Description** - **Karbon Kubernetes Kubeconfig**
+   - **Kubeconfig** - select the **Enter directly** radio button
+   - **Content** - paste in the output from the previous step
+
+   .. figure:: images/25_jenkins_kubconfig.png
+       :align: center
+       :alt: Jenkins Add Kubeconfig Credential
 
 
 Jenkins Pipeline Creation
 +++++++++++++++++++++++++
 
+
+
+
+
+   .. figure:: images/.png
+       :align: center
+       :alt:
 
 Jenkins Pipeline Snippet Generator
 ++++++++++++++++++++++++++++++++++

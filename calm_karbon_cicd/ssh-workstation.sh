@@ -1,4 +1,4 @@
-echo '-----BEGIN RSA PRIVATE KEY-----
+$ echo '-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAii7qFDhVadLx5lULAG/ooCUTA/ATSmXbArs+GdHxbUWd/bNG
 ZCXnaQ2L1mSVVGDxfTbSaTJ3En3tVlMtD2RjZPdhqWESCaoj2kXLYSiNDS9qz3SK
 6h822je/f9O9CzCTrw2XGhnDVwmNraUvO5wmQObCDthTXc72PcBOd6oa4ENsnuY9
@@ -25,4 +25,4 @@ iUf7AoGBALjvtjapDwlEa5/CFvzOVGFq4L/OJTBEBGx/SA4HUc3TFTtlY2hvTDPZ
 dQr/JBzLBUjCOBVuUuH3uW7hGhW+DnlzrfbfJATaRR8Ht6VU651T+Gbrr8EqNpCP
 gmznERCNf9Kaxl/hlyV5dZBe/2LIK+/jLGNu9EJLoraaCBFshJKF
 -----END RSA PRIVATE KEY-----' | tee ~/calmkey
-ssh -i ~/calmkey centos@<workstation-ip>
+$ ssh -i ~/calmkey centos@<workstation-ip>
