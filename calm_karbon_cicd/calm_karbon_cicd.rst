@@ -311,21 +311,83 @@ The first step of our Jenkins Setup is to add our various credentials to Jenkins
 Jenkins Pipeline Creation
 +++++++++++++++++++++++++
 
+It's now time to create our Jenkins Pipeline.  The pipeline is the crux of this entire CI/CD workload: our Gitea webhook calls this pipeline, which is then responsible for building our docker container, uploading the container to DockerHub, and deploying the new container to our Karbon Kubernetes cluster.
 
+#. In the Jenkins UI, click **New Item** in the upper left, enter **helo-kubernetes** as the name, select **Pipeline**, and click **OK**.
+
+   .. figure:: images/26_jenkins_create_pipeline_1.png
+       :align: center
+       :alt: Jenkins Create Pipeline 1
+
+#. Under the **General** section, give your pipeline a description, and leave all checkboxes as **unselected**.
+
+   .. figure:: images/27_jenkins_create_pipeline_2.png
+       :align: center
+       :alt: Jenkins Create Pipeline 2
+
+#. Under the **Build Triggers** section, select **Poll SCM**, and leave the Schedule **blank**.  Without a schedule, Jenkins will *only* run this pipeline from a Webhook, which is desired for this setup.  Leave all other checkboxes as **unselected**.
+
+   .. figure:: images/28_jenkins_create_pipeline_3.png
+       :align: center
+       :alt: Jenkins Create Pipeline 3
+
+#. Skip the **Advanced Project Options** section.
+
+#. Under the **Pipeline** section, fill in the following fields.
+
+   - **Definition** - Change the dropdown to **Pipeline script from SCM**, which allows us to store our Jenkinsfile in the same source code repository as our application
+   - **SCM** - Change the dropdown to **git**
+   - **Repositories**
+
+     - **Repository URL** - Fill in your Gitea repository URL, which can be found by running **echo $GIT_REPO_URL** from your Workstation, and should be of the format **https://<gitea-ip>:3000/gitadmin/hello-kubernetes**
+     - **Credentials** - Leave as default **none** (if your git repository is private, you would need to specify your git credentials here)
+
+   - **Branches to build** - Leave all as default
+   - **Repository browser** - Leave as default of **Auto**
+   - **Additional Behaviours** - Leave default of none
+   - **Script Path** - Leave as default of **Jenkinsfile**
+   - **Lightweight checkout** - Leave as default **checked**
+
+   .. figure:: images/29_jenkins_create_pipeline_4.png
+       :align: center
+       :alt: Jenkins Create Pipeline 4
+
+#. Click **Save** to save the pipeline configuration.
+
+
+Jenkins Pipeline Snippet Generator
+++++++++++++++++++++++++++++++++++
+
+We'll now use the Jenkins Pipeline Syntax Snippet Generator to assist us when we go to create our Jenkinsfile in the upcoming section.  Since the result of this section is a text string which will be included in our Jenkinsfile (and will be provided in the next section), it’s not required to perform the same steps on your system.  However, it is good practice as it’s something you’ll likely need to do if you expand upon this example.
+
+#. Within your pipeline homepage, click the **Pipeline Syntax** button in the left column, and fill out the following fields.
+
+   - **Sample Step** - change the dropdown to **kubernetesDeploy: Deploy to Kubernetes**
+   - **Kubeconfig** - select the Kubeconfig that was added in a previous section
+   - **Config Files** - enter **hello-kubernetes-dep.yaml** (we have not created this file yet, but will in an upcoming section)
+   - Leave all other options as **defaults**
+
+   .. figure:: images/30_jenkins_gen_pipeline.png
+       :align: center
+       :alt: Jenkins Generate Pipeline Script
+
+#. Click **Generate Pipeline Script**.  In the text box that appears, you should see a string like this, however your **kubeconfigId** *will be different*.  When this string is placed in a Jenkinsfile, it instructs Jenkins to deploy a certain configuration (hello-kubernetes-dep.yaml) against a particular Kubernetes cluster (in our case the cluster config is stored in the kubeconfig credential we created in an earlier section).
+
+    .. literalinclude:: gen-pipeline-script.sh
+       :language: bash
+
+   .. note::
+
+     The serverUrl field does not need an actual URL as that information is stored in our Kubeconfig.
+
+Jenkinsfile and Yaml Creation
++++++++++++++++++++++++++++++
 
 
 
    .. figure:: images/.png
        :align: center
        :alt:
-
-Jenkins Pipeline Snippet Generator
-++++++++++++++++++++++++++++++++++
-
-
-Jenkinsfile and Yaml Creation
-+++++++++++++++++++++++++++++
-
 
 Manual Build and Application Deployment
 +++++++++++++++++++++++++++++++++++++++
