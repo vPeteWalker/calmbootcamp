@@ -235,11 +235,11 @@ After a GitHub commit triggers a Jenkins build, and Jenkins successfully builds 
 
 #. First, login to DockerHub_ (or create a free account) and click the **Create Repository** button.
 
-  .. _DockerHub: https://hub.docker.com/
-
    .. figure:: images/20_dockerhub_create_1.png
        :align: center
        :alt: DockerHub Create Repository Button
+
+.. _DockerHub: https://hub.docker.com/
 
 #. Name the repository **hello-kubernetes**, give it a description of your choice, leave all other fields as default, and click **Create**.
 
@@ -313,7 +313,7 @@ Jenkins Pipeline Creation
 
 It's now time to create our Jenkins Pipeline.  The pipeline is the crux of this entire CI/CD workload: our Gitea webhook calls this pipeline, which is then responsible for building our docker container, uploading the container to DockerHub, and deploying the new container to our Karbon Kubernetes cluster.
 
-#. In the Jenkins UI, click **New Item** in the upper left, enter **helo-kubernetes** as the name, select **Pipeline**, and click **OK**.
+#. In the Jenkins UI, click **New Item** in the upper left, enter **hello-kubernetes** as the name, select **Pipeline**, and click **OK**.
 
    .. figure:: images/26_jenkins_create_pipeline_1.png
        :align: center
@@ -380,17 +380,68 @@ We'll now use the Jenkins Pipeline Syntax Snippet Generator to assist us when we
 
      The serverUrl field does not need an actual URL as that information is stored in our Kubeconfig.
 
+#. Optionally copy this script for later use.
+
+
 Jenkinsfile and Yaml Creation
 +++++++++++++++++++++++++++++
 
+We'll now create our Jenkinsfile, which is the script Jenkins uses to run our Pipeline, and our Kubernetes YAML, which is what defines our application.  We'll first grab some information from our Jenkins and DockerHub UIs, and then head over into our workstation to create our files.
+
+#. In the Jenkins UI, click the **Jenkins** icon in the upper left to navigate home, and then select **Credentials** along the left column.
+
+#. Take note of the **ID** column in the Credentials table.  These values will be unique on every system, and your specific values are needed when we create our Jenkinsfile.
+
+   .. figure:: images/31_jenkins_cred_ids.png
+       :align: center
+       :alt: Jenkins Credentials IDs
+
+#. In your DockerHub UI, select your **hello-kubernetes** repository, and along the right side, take note of the **docker push <your-username>/hello-kubernetes:tagname** field.  Your username will be needed in the next step when we create our Jenkinsfile.
+
+   .. figure:: images/32_dockerhub_username.png
+       :align: center
+       :alt: DockerHub Username
+
+#. Head over into your Workstation SSH session, and run the following commands to create our **Jenkinsfile**, substituting your unique credential IDs in the second and third commands, and DockerHub username in the fourth.
+
+    .. literalinclude:: create-jenkinsfile.sh
+       :language: bash
+
+   .. figure:: images/33_create_jenkinsfile.png
+       :align: center
+       :alt: Create Jenkinsfile
+
+#. We'll now create our two Yaml files which will define our application.  The first is a Service_ to expose the application outside of the Karbon Kubernetes cluster, and the second is a Deployment_ which defines the application containers.  We’ll create both files within the **hello-kubernetes/** directory, but we’ll *only* apply the service yaml, as Jenkins will apply the deployment yaml.
+
+    .. literalinclude:: create-yaml.sh
+       :language: bash
+
+   .. figure:: images/34_create_yaml.png
+       :align: center
+       :alt: Create Application YAML
+
+   .. note::
+
+     Take note of the ${GIT_COMMIT} value in the deployment YAML.  Jenkins will automatically substitute in the git commit ID, so each time the deployment is applied, the image tag is incremented, and the pods are re-deployed.
+
+#. Now that our Service is deployed, and our local files are written, it’s time to commit and push changes to our repository with the following commands.
+
+    .. literalinclude:: git-add-jenkinsfile-yaml.sh
+       :language: bash
+
+   .. figure:: images/35_git_add_files.png
+       :align: center
+       :alt: Git Add and Commit Jenkinsfile and App YAML Files
+
+Typically, running **git push** will trigger a Jenkins build through the GitHub webhook, however this will not work until we manually trigger a build.  This is because the SCM details (including the project URL) in the Jenkins pipeline are not initialized until the first build, and without those details Jenkins is not able to determine the correlation between the webhook and the pipeline.  Let’s manually kick off a build to get things started.
+
+Manual Build and Application Deployment
++++++++++++++++++++++++++++++++++++++++
 
 
    .. figure:: images/.png
        :align: center
        :alt:
-
-Manual Build and Application Deployment
-+++++++++++++++++++++++++++++++++++++++
 
 
 Automated Application Deployment Through a Git Push
