@@ -424,6 +424,9 @@ We'll now create our Jenkinsfile, which is the script Jenkins uses to run our Pi
 
      Take note of the ${GIT_COMMIT} value in the deployment YAML.  Jenkins will automatically substitute in the git commit ID, so each time the deployment is applied, the image tag is incremented, and the pods are re-deployed.
 
+.. _Service: https://kubernetes.io/docs/concepts/services-networking/service/
+.. _Deployment: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+
 #. Now that our Service is deployed, and our local files are written, it’s time to commit and push changes to our repository with the following commands.
 
     .. literalinclude:: git-add-jenkinsfile-yaml.sh
@@ -433,30 +436,112 @@ We'll now create our Jenkinsfile, which is the script Jenkins uses to run our Pi
        :align: center
        :alt: Git Add and Commit Jenkinsfile and App YAML Files
 
-Typically, running **git push** will trigger a Jenkins build through the GitHub webhook, however this will not work until we manually trigger a build.  This is because the SCM details (including the project URL) in the Jenkins pipeline are not initialized until the first build, and without those details Jenkins is not able to determine the correlation between the webhook and the pipeline.  Let’s manually kick off a build to get things started.
 
 Manual Build and Application Deployment
 +++++++++++++++++++++++++++++++++++++++
 
+Typically, running **git push** will trigger a Jenkins build through the GitHub webhook, however this will not work until we manually trigger a build.  This is because the SCM details (including the project URL) in the Jenkins pipeline are not initialized until the first build, and without those details Jenkins is not able to determine the correlation between the webhook and the pipeline.  Let’s manually kick off a build to get things started.
 
-   .. figure:: images/.png
+#. In the Jenkins UI, navigate to our **hello-kubernetes** Pipeline, and click the **Build Now** link in the left column.
+
+   .. figure:: images/36_jenkins_manual_build.png
        :align: center
-       :alt:
+       :alt: Jenkins Manual Build
+
+#. Build #1 should appear in the **Build History** section in the left column.  Click the **#1** link, and then select **Console Output** in the left column.  This allows us to monitor the status of the Jenkins build.  At the top of the build, we should see a successful login to DockerHub.
+
+   .. figure:: images/37_jenkins_console_1.png
+       :align: center
+       :alt: Jenkins Build #1 Console Output 1
+
+#. In the middle of our console output we should see the docker image being successfully built.
+
+   .. figure:: images/38_jenkins_console_2.png
+       :align: center
+       :alt: Jenkins Build #1 Console Output 2
+
+#. At the bottom of the console output we should see our image being tagged, pushed to DockerHub, and then finally our **kubernetesDeploy** task deploying our containers to our Karbon Kubernetes cluster.
+
+   .. figure:: images/39_jenkins_console_3.png
+       :align: center
+       :alt: Jenkins Build #1 Console Output 3
+
+#. In DockerHub, we can validate that our newly pushed container is present, with both our GIT_COMMIT and **latest** labels.
+
+   .. figure:: images/40_dockerhub_tags.png
+       :align: center
+       :alt: DockerHub Repository Tags
+
+#. We can also validate through the command line that our pods have been deployed, and our application Service has an IP by running the following commands from our Workstation.
+
+    .. literalinclude:: kubectl-get.sh
+       :language: bash
+
+   .. figure:: images/41_kubectl.png
+       :align: center
+       :alt: Kubectl Get Pods / Svc
+
+#. We can then access our application via the **External-IP** value of the hello-kubernetes service (10.45.100.46 in my case).  Be sure to refresh the page several times to see the pod change.
+
+   .. figure:: images/42_hello_nutanix.png
+       :align: center
+       :alt: Hello Nutanix Application
 
 
 Automated Application Deployment Through a Git Push
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
+If you’ve made it this far, congratulations!  We’re finally at a point where we can kick off fully automated builds and deployments.  To do so, we need to commit and push a change in our application code.  So our change is obvious, we’ll change the **Hello Nutanix!** message to **Hello CI/CD!**.
 
+#. From within the **hello-kubernetes/** directory on your workstation, run the following commands to change the code, add the change, commit the change, and finally push the change.
+
+    .. literalinclude:: change-app-code.sh
+       :language: bash
+
+   .. figure:: images/43_git_push_new_code.png
+       :align: center
+       :alt: Git Push New Application Code
+
+#. As soon as you run git push, you should see an automated build started in your Jenkins project.
+
+   .. figure:: images/44_jenkins_build_2.png
+       :align: center
+       :alt: Jenkins Automatic Build 2
+
+#. Once the build is complete, let’s first verify we have new pods deployed via the command line.
+
+    .. literalinclude:: kubectl-get-pods.sh
+       :language: bash
+
+   .. figure:: images/45_kubectl-get-pods.png
+       :align: center
+       :alt: Kubectl Get Pods after Git Push
+
+#. Finally, refresh our application page to view the updated message.
+
+   .. figure:: images/46_hello_cicd.png
+       :align: center
+       :alt: Hello CI/CD Application
 
 Takeaways
 +++++++++
 
+While setting up a CI/CD pipeline can be quite a bit of effort, the value it brings to your organization makes it well worth it.  Once configured, a simple git push -- an operation your developers likely run several times a day -- results in a brand new application, with minimal to no effort on your or the developers part.  This can be further expanded into advanced techniques like Canary releases or A/B testing.  Thanks for reading!
 
-   .. figure:: images/.png
-       :align: center
-       :alt:
+(Optional) Use Nutanix Calm Jenkins Plugin
+++++++++++++++++++++++++++++++++++++++++++
 
+In this lab, we utilized the Kubernetes-Continuous-Deploy_ Jenkins Plugin to deploy our new docker containers.  Another option would be to utilize the Nutanix-Calm_ Jenkins Plugin to call a Calm application action to deploy our new docker containers.  Can you change the existing Jenkins Pipeline to utilize the Nutanix Calm plugin instead?
+
+.. _Kubernetes-Continuous-Deploy: https://wiki.jenkins.io/display/JENKINS/Kubernetes+Continuous+Deploy+Plugin
+.. _Nutanix-Calm: https://wiki.jenkins.io/display/JENKINS/Nutanix+Calm+Plugin
+
+**Hints**
+
+- You'll first want to define our **hello-kubernetes** application as a Calm Application Blueprint, rather than the YAML we were using.
+- Once you successfully build the blueprint, create a **profile action** which accepts a runtime variable (which represents the docker label / tag) and makes an API call into the Kubernetes API to update the containers.
+- Once that is built, utilize the Jenkins syntax generator to create the relevant Jenkinsfile snippet to call your Calm Application Action.
+- Substitute out the Kubernetes Deploy snippet with the Calm Application Action snippet in your Jenkinsfile.
 
 .. |proj-icon| image:: ../images/projects_icon.png
 .. |mktmgr-icon| image:: ../images/marketplacemanager_icon.png

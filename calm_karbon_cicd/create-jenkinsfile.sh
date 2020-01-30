@@ -4,7 +4,7 @@ $ KUBE_ID=<your-kubernetes-kubeconfig-id>
 $ DOCKER_USER=<your-dockerhub-username>
 $ cat << EOF > Jenkinsfile
 node("docker") {
-    docker.withRegistry("", "${DOCKER_ID}" {
+    docker.withRegistry("", "${DOCKER_ID}") {
 
         git url: "${GIT_REPO_URL}"
         env.GIT_COMMIT = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
@@ -14,7 +14,7 @@ node("docker") {
 
         stage "Publish"
         helloK8s.push 'latest'
-        helloK8s.push '\${env.GIT_COMMIT}'
+        helloK8s.push "\${env.GIT_COMMIT}"
 
         stage "Deploy"
         kubernetesDeploy configs: 'hello-kubernetes-dep.yaml', kubeConfig: [path: ''], kubeconfigId: "${KUBE_ID}", secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']
