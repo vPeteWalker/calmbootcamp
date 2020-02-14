@@ -16,10 +16,6 @@ Lab Setup
 
 This lab depends on the availability of a multi-tier **Task Manger** web application implemented during the :ref:`calm_linux` lab.
 
-If you already have basic Calm familiarity and have not completed the :ref:`calm_linux` lab, please refer to the :ref:`taskman` lab for instructions on importing the base **Task Manager** blueprint.
-
-**You do NOT need to launch the Task Manager blueprint once imported.**
-
 Scaling Out
 +++++++++++
 
