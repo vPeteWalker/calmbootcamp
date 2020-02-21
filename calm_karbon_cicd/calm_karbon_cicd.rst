@@ -241,7 +241,7 @@ After a GitHub commit triggers a Jenkins build, and Jenkins successfully builds 
 
 .. _DockerHub: https://hub.docker.com/
 
-#. Name the repository **hello-kubernetes**, give it a description of your choice, leave all other fields as default, and click **Create**.
+#. Name the repository **hello-kubernetes**, give it a description of your choice, leave all other fields as default (be sure to leave the repo as **Public**), and click **Create**.
 
    .. figure:: images/21_dockerhub_create_2.png
        :align: center
