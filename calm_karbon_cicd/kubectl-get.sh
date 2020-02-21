@@ -1,2 +1,2 @@
-$ kubectl get pods
-$ kubectl get svc
+kubectl get pods
+kubectl get svc

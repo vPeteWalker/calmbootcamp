@@ -157,7 +157,7 @@ To access the developer workstation, you have two options: 1, use the web SSH cl
        :align: center
        :alt: CI/CD Infrastructure App Copy Workstation IP
 
-#. In your laptop's terminal, run the following commands (TODO: figure out how we're handling keys) to SSH into your workstation.
+#. In your laptop's terminal, run the following commands to SSH into your workstation (be sure to subsitute in your workstation IP).
 
     .. literalinclude:: ssh-workstation.sh
        :language: bash
@@ -280,7 +280,7 @@ The first step of our Jenkins Setup is to add our various credentials to Jenkins
        :align: center
        :alt: Jenkins Add DockerHub Credentials
 
-#. Lastly, we’ll need to add our kubeconfig file as a credential to allow Jenkins to deploy our updated application onto our Kubernetes cluster.  In our Workstation CLI, run the following commands  to create a Kubernetes Service Account **jenkins**, and then create a Role Binding which maps our Service Account the the built-in **admin** role. 
+#. Lastly, we’ll need to add our kubeconfig file as a credential to allow Jenkins to deploy our updated application onto our Kubernetes cluster.  In our Workstation CLI, run the following commands  to create a Kubernetes Service Account **jenkins**, and then create a Role Binding which maps our Service Account the the built-in **admin** role (each individual command starts with a "$", they should be run one at a time, and do **not** include the "$" in the command). 
 
     .. literalinclude:: create-sa.sh
        :language: bash
@@ -402,7 +402,7 @@ We'll now create our Jenkinsfile, which is the script Jenkins uses to run our Pi
        :align: center
        :alt: DockerHub Username
 
-#. Head over into your Workstation SSH session, and run the following commands to create our **Jenkinsfile**, substituting your unique credential IDs in the second and third commands, and DockerHub username in the fourth.
+#. Head over into your Workstation SSH session, and run the following commands to create our **Jenkinsfile**, substituting your unique credential IDs in the second and third commands, and DockerHub username in the fourth (each individual command starts with a "$", they should be run one at a time, and do **not** include the "$" in the command).
 
     .. literalinclude:: create-jenkinsfile.sh
        :language: bash
@@ -411,7 +411,7 @@ We'll now create our Jenkinsfile, which is the script Jenkins uses to run our Pi
        :align: center
        :alt: Create Jenkinsfile
 
-#. We'll now create our two Yaml files which will define our application.  The first is a Service_ to expose the application outside of the Karbon Kubernetes cluster, and the second is a Deployment_ which defines the application containers.  We’ll create both files within the **hello-kubernetes/** directory, but we’ll *only* apply the service yaml, as Jenkins will apply the deployment yaml.
+#. We'll now create our two Yaml files which will define our application.  The first is a Service_ to expose the application outside of the Karbon Kubernetes cluster, and the second is a Deployment_ which defines the application containers.  We’ll create both files within the **hello-kubernetes/** directory, but we’ll *only* apply the service yaml, as Jenkins will apply the deployment yaml (each individual command starts with a "$", they should be run one at a time, and do **not** include the "$" in the command).
 
     .. literalinclude:: create-yaml.sh
        :language: bash
