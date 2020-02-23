@@ -26,7 +26,7 @@ Pre-requisites
 
 This lab requires:
 
-- a **running Nutanix Karbon Kubernetes cluster**.  When the Calm blueprint is launched in the next step, a runtime variable will prompt you for the Karbon Kubernetes cluster name.  If you do not have a cluster already deployed, please go do that and then return to this lab.
+- a **running Nutanix Karbon Kubernetes cluster**.  When the Calm blueprint is launched in the next step, a runtime variable will prompt you for the Karbon Kubernetes cluster name.  If this bootcamp environment was staged, then use the default value of **karbon_bootcamp_cluster**.  Otherwise, please specify the name of an *existing* Karbon Kubernetes cluster.
 - a **DockerHub account**.  If you do not already have one, go ahead and sign up for an account_ (it's free).
 
 .. _account: https://hub.docker.com/
@@ -56,7 +56,7 @@ Building a CI/CD pipeline generally involves connecting a large number of dispar
 
    - **Name of the Application** - *initials*-cicd-infra
    - **gitea_password** - Any password desired, which will be set as the Gitea admin user password
-   - **karbon_cluster_name** - The name of the Karbon cluster to use for this lab (it **must** already be depoyed)
+   - **karbon_cluster_name** - The name of the Karbon cluster to use for this lab (it **must** already be depoyed).  If the cluster was staged, leave the default of **karbon_bootcamp_cluster**.
 
    .. figure:: images/03_bp_launch_2.png
        :align: center
