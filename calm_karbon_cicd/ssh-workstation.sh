@@ -25,4 +25,5 @@ iUf7AoGBALjvtjapDwlEa5/CFvzOVGFq4L/OJTBEBGx/SA4HUc3TFTtlY2hvTDPZ
 dQr/JBzLBUjCOBVuUuH3uW7hGhW+DnlzrfbfJATaRR8Ht6VU651T+Gbrr8EqNpCP
 gmznERCNf9Kaxl/hlyV5dZBe/2LIK+/jLGNu9EJLoraaCBFshJKF
 -----END RSA PRIVATE KEY-----' | tee ~/calmkey
+chmod 600 ~/calmkey
 ssh -i ~/calmkey centos@<workstation-ip>
