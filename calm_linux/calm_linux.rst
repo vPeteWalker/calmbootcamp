@@ -157,9 +157,13 @@ In this exercise you will create the database, webserver, and load balancer serv
 Creating the Database Service
 .............................
 
-#. In **Application Overview > Services**, click :fa:`plus-circle` to add a new Service.
+#. In **Application Overview > Service**, click :fa:`plus-circle` to add a new Service.
 
-   By default, the Application Overview is located in the lower right-hand corner of the Blueprint Editor and is used to create and manage Blueprint layers such as Services, Application Profiles, and Actions.
+   .. note::
+
+      The pane within the Blueprint Editor used to create and manage Blueprint Layers. Blueprint Layers consist of Services, Actions, and Application Profiles.
+
+      By default, the Application Overview is located in the lower right-hand corner of the Blueprint Editor and is used to create and manage Blueprint layers such as Services, Application Profiles, and Actions.
 
    .. figure:: images/7.png
 
