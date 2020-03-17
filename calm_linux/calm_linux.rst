@@ -163,7 +163,7 @@ Creating the Database Service
 
       The pane within the Blueprint Editor used to create and manage Blueprint Layers is called the Application Overview. Blueprint Layers consist of Services, Actions, and Application Profiles.
 
-      By default, the Application Overview is located in the lower right-hand corner of the Blueprint Editor and is used to create and manage Blueprint layers such as Services, Application Profiles, and Actions.
+      By default, the Application Overview is located in the lower left-hand corner of the Blueprint Editor and is used to create and manage Blueprint layers such as Services, Application Profiles, and Actions.
 
    .. figure:: images/7.png
 
