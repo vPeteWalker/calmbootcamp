@@ -34,7 +34,7 @@ Delivering the Enterprise Cloud Vision
 
 Application Automation
 
-- App-centric orchestrationand lifecycle management
+- App-centric orchestration and lifecycle management
 - Policy-based governance
 - Self-Service provisioning
 

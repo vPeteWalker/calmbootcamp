@@ -51,7 +51,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Nutanix Calm Bootcamp'
-copyright = u'2019 Nutanix'
+copyright = u'2020 Nutanix'
 author = u'Nutanix Global Technical Enablement'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -94,10 +94,10 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # (Optional) Logo. Should be small enough to fit the navbar (ideally 24x24).
 # Path should be relative to the ``_static`` files directory.
 
-html_logo = "NutanixWorkshops.svg"
-
-html_favicon = "favicon.ico"
-
+html_logo = '_static/NutanixWorkshops.svg'
+# https://s3.amazonaws.com/handsonworkshops.prod.media/a/a/logo/nutanix-workshops.svg
+html_favicon = '_static/favicon.ico'
+# https://s3.amazonaws.com/handsonworkshops.prod.media/a/a/logo/nutanix-favicon.ico
 html_title = ""
 
 html_show_sphinx = False
