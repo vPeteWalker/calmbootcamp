@@ -49,7 +49,7 @@ What's New
 ++++++++++
 
 - Workshop updated for the following software versions:
-    - AOS & PC 5.11.x
+    - AOS 5.16.x & PC 5.17.x
 
 
 
@@ -84,7 +84,7 @@ Cluster assignment
 
 The instructor will tell the attendees their assigned clusters. 
 
-.. note::
+.. danger::
   If these are Single Node Clusters (SNCs) pay close attention on the networking part. The SNCs are completely different setup and configured compared to the "normal" three/four node clusters
 
 Environment Details
@@ -271,11 +271,22 @@ Each cluster has a dedicated domain controller VM, **DC**, responsible for provi
   * - SSP Basic Users
     - basicuser01-basicuser25
     - nutanix/4u
+  * - SSP Custom
+    - user01-user25
+    - nutanix/4u
 
 Access Instructions
 +++++++++++++++++++
 
 The Nutanix Hosted POC environment can be accessed a number of different ways:
+
+Frame VDI
+.........
+
+Login to: https://frame.nutanix.com/x/labs
+
+**Nutanix Employees** - Use your **NUTANIXDC** credentials
+**Non-Employees** - Use **Lab Access User** Credentials
 
 Parallels VDI
 .................
@@ -310,6 +321,6 @@ For RTP:
 Nutanix Version Info
 ++++++++++++++++++++
 
-- **AHV Version** - AHV 20170830.337 (AOS 5.11+)
-- **AOS Version** - 5.11
-- **PC Version** - 5.11
+- **AHV Version** - AHV 20190916.158 (AOS 5.16+)
+- **AOS Version** - 5.16.1.2
+- **PC Version** - 5.17.0.3

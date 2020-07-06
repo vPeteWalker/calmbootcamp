@@ -20,9 +20,9 @@ Enabling App Management
 
 Calm is built into Prism Central and requires no additional appliances or consoles to manage. Before you can begin managing apps in your environment with Calm, the service must be enabled.
 
-.. note::
+.. important::
 
-  Calm can only be enabled once per Prism Central instance. If **Enable app management** displays a green check mark next to it, that means Calm has already been enabled for the Prism Central instance being used. Proceed to :ref:`calm_projects`.
+  Calm can only be enabled once per Prism Central instance. If **Enable app management** displays a green check mark next to it, that means Calm has already been enabled for the Prism Central instance being used. **If it is, the rest of this module is for you to read. There is nothing that needs to be done**. Proceed to :ref:`calm_projects`.
 
 #. In **Prism Central**, click the **?** drop down menu, expand **New in Prism Central** and select **Enable app management**.
 
@@ -67,4 +67,4 @@ While we're waiting for Calm to enable, we'll add an Active Directory server.  W
 
 #. Refresh the browser and select **Calm** from the navigation bar.  If Calm is still enabling, wait another minute, and try again.
 
-.. figure:: images/5.10/enable7.png
+.. figure:: images/calm3/overview.png
