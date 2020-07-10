@@ -61,7 +61,7 @@ Using Existing Machine Services
    +------------------------------+------------------+
    | **Service Name**             | PC               |
    +------------------------------+------------------+
-   | **Name**                     | PrismCentral     |
+   | **VM - Name**                | PrismCentral     |
    +------------------------------+------------------+
    | **Cloud**                    | Existing Machine |
    +------------------------------+------------------+
@@ -82,7 +82,7 @@ Using Existing Machine Services
    | **Delay**                    | Leave default    |
    +------------------------------+------------------+
 
-   .. figure:: images/existing_machine.png
+   .. figure:: images/calm3/existing_machine.png
 
    There are several new and interesting items in the above configuration:
 
@@ -112,7 +112,7 @@ In this exercise, we're going to be creating a custom action for our application
    - **Value** - apps
    - Select **Runtime** by toggling the running man icon in the upper right to blue
 
-   .. figure:: images/restlist.png
+   .. figure:: images/calm3/restlist.png
 
    When running the custom action later, Calm will prompt the user for input. **Apps** will be pre-filled default value, but it can be changed prior to executing the script action.
 
@@ -145,7 +145,7 @@ In this exercise, we're going to be creating a custom action for our application
         print "Post request failed", resp.content
         exit(1)
 
-   .. figure:: images/runtime_post.png
+   .. figure:: images/calm3/runtime_post.png
 
    There are some new and interesting features of this task:
 
@@ -162,13 +162,13 @@ In this exercise, we're going to create an additional custom action to make a di
 
 #. Select the **PC** service. In the **Configuration Pane**, select the **Service** tab. Add a variable named **SUBNET**, leaving all other fields blank.
 
-   .. figure:: images/subnet_variable.png
+   .. figure:: images/calm3/subnet_variable.png
 
 #. In the **Application Overview > Application Profile > Default**, section, select :fa:`plus-circle` next to **Actions** to add a new, custom action.
 
 #. Name the action **GetDefaultSubnet**.
 
-   .. figure:: images/get_default_subnet.png
+   .. figure:: images/calm3/get_default_subnet.png
 
 #. Click the **+ Task** button to add a task to the **GetDefaultSubnet** custom action.  Fill in the following fields:
 
@@ -216,7 +216,7 @@ In this exercise, we're going to create an additional custom action to make a di
       print "Post clusters/list request failed", resp.content
       exit(1)
 
-   .. figure:: images/get_subnet_uuid.png
+   .. figure:: images/calm3/get_subnet_uuid.png
 
    There are two key differences between the **RESTList** and **GetDefaultSubnet** tasks. The first difference is the use of the **Set Variable** task type. Take note of the **print "SUBNET={0}"** line: Calm will parse output in the format of **variable=value**, and set the variable equal to the value.  In this example, we're printing the variable called **SUBNET** is equal to the UUID of the "default_subnet_reference" field in the initial API call response. In the **Output** field below the Script body, we must paste in the variable name for Calm to set the variable appropriately. The variable must already be defined in the Calm blueprint, whether globally, or in this case, as a variable local to the **PC** service.
 
@@ -252,7 +252,7 @@ In this exercise, we're going to create an additional custom action to make a di
 
    In this task we're dynamically returning details about the default subnet using a GET API call and the **SUBNET** UUID variable returned by the previous task.
 
-   .. figure:: images/get_subnet_info.png
+   .. figure:: images/calm3/get_subnet_info.png
 
 #. Click **Save**, and ensure no errors or warnings appear.
 
@@ -263,9 +263,9 @@ Running the Custom Actions
 
    The **Create** task should complete quickly, as no VMs are being provisioned or Package Install scripts being run.
 
-#. Once the application reaches **Running** status, select the **Manage** tab.
+#. Once the application reaches **Running** status, select the **Manage** tab and click in the **Create** part on the |eye| icon.
 
-   .. figure:: images/app_create.png
+   .. figure:: images/calm3/app_create.png
 
 #. Next, run the **RESTList** action by clicking its :fa:`play` icon. A new window appears displaying the **kind** variable and default **apps** value. Click **Run**.
 
@@ -273,7 +273,7 @@ Running the Custom Actions
 
 #. In the output on the right pane, maximize the **RuntimePost** task, and view the API output. The output pane can be toggled by clicking the :fa:`eye` icon. Maximize the output/script window to make viewing easier. As expected, the script returns a JSON body with an array describing each launched application in Calm.
 
-   .. figure:: images/apps_run2.png
+   .. figure:: images/calm3/apps_run2.png
 
 #. Run the **RESTList** action again, altering the value to another `Prism Central API entity <https://developer.nutanix.com/reference/prism_central/v3/>`_, such as **images**, **clusters**, **hosts**, or **vms**.
 
@@ -292,7 +292,7 @@ Tasks such as common API calls, package installations for common services, domai
 
 #. In the **Application Overview > Application Profile** pane, select the **RESTList** action.
 
-#. Select the **RuntimeList** task to open the task in the **Configuration Pane**.
+#. Select the **RuntimePost** task to open the task in the **Configuration Pane**.
 
 #. Click **Publish to Library**.
 
@@ -307,7 +307,11 @@ Tasks such as common API calls, package installations for common services, domai
 
 #. Click **Publish**.
 
-#. Open the **Task Library** in the sidebar.  Select your published task. By default, the task will be available to the project from which it was originally published, but you can specify additional projects with which to share the task.
+#. Open the **Task Library** in the sidebar. Select your published task. By default, the task will be available to the project from which it was originally published, but you can specify additional projects with which to share the task.
+
+   .. figure:: images/calm3/library_items.png
+
+------
 
 Takeaways
 +++++++++
@@ -333,3 +337,4 @@ What are the key things you should know about **Nutanix Calm**?
 .. |bp-icon| image:: ../images/blueprints_icon.png
 .. |blueprints| image:: images/blueprints.png
 .. |applications| image:: images/blueprints.png
+.. |eye| images:: images/calm3/eye.png

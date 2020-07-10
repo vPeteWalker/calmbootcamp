@@ -50,6 +50,7 @@ During the creation of the Task Manager blueprint, the **WebServer** service was
    - **Task Name** - add_webserver
    - **Type** - Execute
    - **Script Type** - Shell
+   - **Enpoint (Optional)** - Leave default
    - **Credential** - CENTOS
 
 #. Copy and paste the following script into the **Script** field:
@@ -68,7 +69,7 @@ During the creation of the Task Manager blueprint, the **WebServer** service was
 
    The script will parse the last IP address in the WebServer address array and append it to the haproxy.cfg file.  However, we want to be sure that this doesn't happen until **after** the new WebServer is fully up, otherwise the HAProxy server may send requests to a non-functioning WebServer.
 
-#. To solve this issue, create an edge to force a dependency on the **web_scale_out** task completing prior to the **add_webserver** task.
+#. To solve this issue, create an edge to force a dependency on the **web_scale_out** task completing prior to the **add_webserver** task. Click on the **Scale Out** task under the **WebServerAHV** and select the |dependency| icon and drag it to the **add_webserver** task in HAProxy.
 
    Your **Workspace** should now look like this:
 
@@ -98,6 +99,7 @@ It's the end of your busy season, and you'd like to optimize your resource utili
    - **Task Name** - del_webserver
    - **Type** - Execute
    - **Script Type** - Shell
+   - **Enpoint (Optional)** - Leave default
    - **Credential** - CENTOS
 
 #. Copy and paste the following script into the **Script** field:
@@ -144,6 +146,8 @@ Your company has a mandate to keep all application code up to date, to help mini
    | **Type**         | Execute   | Execute       | Execute     |
    +------------------+-----------+---------------+-------------+
    | **Script Type**  | Shell     | Shell         | Shell       |
+   +------------------+-----------+---------------+-------------+
+   | **Endpoint**     |            Leave Default                |
    +------------------+-----------+---------------+-------------+
    | **Credential**   | CENTOS    | CENTOS        | CENTOS      |
    +------------------+-----------+---------------+-------------+
@@ -200,6 +204,8 @@ Your company has a mandate to keep all application code up to date, to help mini
    | **Type**         | Execute      | Execute          | Execute        |
    +------------------+--------------+------------------+----------------+
    | **Script Type**  | Shell        | Shell            | Shell          |
+   +------------------+--------------+------------------+----------------+
+   | **Endpoint**     |            Leave Default                         |
    +------------------+--------------+------------------+----------------+
    | **Credential**   | CENTOS       | CENTOS           | CENTOS         |
    +------------------+--------------+------------------+----------------+
@@ -317,6 +323,8 @@ Leveraging a runtime variable, can you modify the scale out or scale in actions 
 
 This will require some bash scripting experience to ensure the appropriate number of entries are being added and/or removed from the haproxy.cfg file.
 
+------
+
 Takeaways
 +++++++++
 
@@ -327,3 +335,7 @@ What are the key things you should know about **Nutanix Calm**?
 - Whether it's a built in task, like scaling, or a custom task, like upgrades, Calm can be directed to perform the operations in specific order, or if order doesn't matter, perform them in parallel to save on time.
 
 - What operation are you currently doing on a regular basis?  It's likely that it can be modeled in Calm, saving you countless hours.  Take back your weekend!
+
+
+
+.. |dependency| image:: images/dependency.png

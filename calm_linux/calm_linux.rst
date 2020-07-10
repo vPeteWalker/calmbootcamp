@@ -38,7 +38,7 @@ You can use blueprints to model the applications of various complexities; from s
    - **Description** - [Task Manager Application](\http://@@{HAProxy.address}@@/)
    - **Project** - *Initials*-Calm
 
-   .. figure:: images/2.png
+   .. figure:: images/calm3/bp_setup.png
 
 #. Click **Proceed** to launch the Blueprint Editor.
 
@@ -96,6 +96,9 @@ This exercise uses a "Generic Cloud" CentOS image. This is a common option for m
 
 #. Click **Save**, and then **Back**.
 
+   .. note:: 
+      If you don't see the Save and Back buttons, make sure your browser screen is maximized.
+
 Defining Variables
 ++++++++++++++++++
 
@@ -106,7 +109,7 @@ By default, variables are stored as a **String** and are visible in the Configur
 
 Variables can be used in scripts executed against objects using the **@@{variable_name}@@** construct. Calm will expand and replace the variable with the appropriate value before sending to the VM.
 
-#. In the **Configuration Pane** on the right side of the Blueprint Editor, under **Variables**, add the following variables (**Runtime** is specified by toggling the **Running Man** icon to Blue):
+#. In the **Configuration Pane** on the right side of the Blueprint Editor, under **Variables**, add the following variables by clicking on the **+** sign (**Runtime** is specified by toggling the **Running Man** icon to Blue):
 
    +------------------------+-------------------------------+------------+-------------+
    | **Variable Name**      | **Data Type** | **Value**     | **Secret** | **Runtime** |
@@ -185,10 +188,6 @@ Creating the Database Service
 
      This will use the Runtime **User_initials** variable you previously provided to prepend the VM name with your initials. It will also use built-in macros to provide the array index (for scale out services) and a time stamp.
 
-   - **Image** - CentOS_7_Cloud
-   - **Device Type** - Disk
-   - **Device Bus** - SCSI
-   - Select **Bootable**
    - **vCPUs** - 2
    - **Cores per vCPU** - 1
    - **Memory (GiB)** - 4
@@ -210,8 +209,21 @@ Creating the Database Service
 
          When using an SSH Private Key Credential, Calm is able to decode that private key into the matching public key, and makes the decoded value accessable via the @@{Credential_Name.public_key}@@ macro. Cloud-Init is then leveraged to populate the SSH public key value as an authorized key, allowing for the corresponding private key to be used to authenticate to the host.
 
+   *Under DISK section:*
+
+   - **Device Type** - Disk
+   - **Device Bus** - SCSI
+   - **Image** - CentOS_7_Cloud
+   - Select **Bootable**
+
+   *Under Network section:*
+
    - Select :fa:`plus-circle` under **Network Adapters (NICs)**
    - **NIC 1** - Primary
+   - **Private IP** - Dynamic
+   
+   *Under Connection section:*
+
    - **Credential** - CENTOS
 
 #. Click **Save**.
@@ -224,7 +236,11 @@ Creating the Database Service
 
    Now that you have completed the deployment details for the VM associated with the service, the next step is to tell Calm how the application will be installed on the VM.
 
-#. With the **MySQL** service icon selected in the Workspace pane, scroll to the top of the **Configuration Panel**, and select the **Package** tab.
+
+Creating the MySQL Server Service
+.................................
+
+#. With the **MySQL** service icon selected in the Workspace pane (the blue background area), scroll to the top of the **Configuration Panel**, and select the **Package** tab.
 
    The Package is the configuration and application(s) installed on the Service, and is typically accomplished by executing a script on the Service VM.
 
@@ -241,6 +257,7 @@ Creating the Database Service
    - **Task Name** - Install_sql
    - **Type** - Execute
    - **Script Type** - Shell
+   - **Endpoint (Optional)** - Leave default
    - **Credential** - CENTOS
    - **Script** -
 
@@ -278,7 +295,7 @@ Creating the Database Service
        FLUSH PRIVILEGES;
        EOF
 
-   .. figure:: images/10.png
+   .. figure:: images/calm3/install_sql.png
 
    .. note::
       You can click the **Pop Out** icon on the script field for a larger window to view/edit scripts.
@@ -294,6 +311,7 @@ Creating the Database Service
    - **Task Name** - Uninstall_sql
    - **Type** - Execute
    - **Script Type** - Shell
+   - **Endpoint (Optional)** - Leave default
    - **Credential** - CENTOS
    - **Script** -
 
@@ -302,7 +320,7 @@ Creating the Database Service
        #!/bin/bash
        echo "Goodbye!"
 
-   .. figure:: images/11.png
+   .. figure:: images/calm3/install_sql.png
 
    .. note::
       The uninstall script can be used for removing packages, updating network services like DHCP and DNS, removing entries from Active Directory, etc. It is not being used for this simple example.
@@ -314,7 +332,9 @@ Creating the Web Server Service
 
 You will now follow similar steps to define a web server service.
 
-#. In **Application Overview > Services**, add an additional service.
+#. In **Application Overview > Services**, add an additional service by clicking on the **+** sign.
+   
+   .. figure:: images/calm3/add_service.png
 
 #. Select the new service and fill out the following **VM** fields in the **Configuration Panel**:
 
@@ -323,10 +343,6 @@ You will now follow similar steps to define a web server service.
    - **Cloud** - Nutanix
    - **OS** - Linux
    - **VM Name** - @@{User_initials}@@-WebServer-@@{calm_array_index}@@
-   - **Image** - CentOS_7_Cloud
-   - **Device Type** - Disk
-   - **Device Bus** - SCSI
-   - Select **Bootable**
    - **vCPUs** - 2
    - **Cores per vCPU** - 1
    - **Memory (GiB)** - 4
@@ -343,9 +359,22 @@ You will now follow similar steps to define a web server service.
              ssh-authorized-keys:
                - @@{CENTOS.public_key}@@
              sudo: ['ALL=(ALL) NOPASSWD:ALL']
+   
+   *Under DISK section:*
+
+   - **Device Type** - Disk
+   - **Device Bus** - SCSI
+   - **Image** - CentOS_7_Cloud
+   - Select **Bootable**
+
+   *Under Network section:*
 
    - Select :fa:`plus-circle` under **Network Adapters (NICs)**
    - **NIC 1** - Primary
+   - **Private IP** - Dynamic
+   
+   *Under Connection section:*
+
    - **Credential** - CENTOS
 
 #. Select the **Package** tab.
@@ -359,6 +388,7 @@ You will now follow similar steps to define a web server service.
    - **Name Task** - Install_WebServer
    - **Type** - Execute
    - **Script Type** - Shell
+   - **Endpoint (Optional)** - Leave default
    - **Credential** - CENTOS
    - **Script** -
 
@@ -437,6 +467,7 @@ You will now follow similar steps to define a web server service.
    - **Name Task** - Uninstall_WebServer
    - **Type** - Execute
    - **Script Type** - Shell
+   - **Endpoint (Optional)** - Leave default
    - **Credential** - CENTOS
    - **Script** -
 
@@ -452,9 +483,9 @@ You will now follow similar steps to define a web server service.
 
 #. With the **WebServer** service icon selected in the Workspace pane, scroll to the top of the **Configuration Panel**, and select the **Service** tab.
 
-#. Under **Deployment Config > Number of Replicas**, increase the **Min** value from 1 to 2 and the **Max** value from 1 to 4.
+#. Under **Deployment Config > Number of Replicas**, increase the **Default** and **Min** value from 1 to 2 and the **Max** value from 1 to 4.
 
-   .. figure:: images/12.png
+   .. figure:: images/calm3/replicas.png
 
    This change will provision a minimum of 2 WebServer VMs for each deployment of the application, and allow the array to grow up to a total of 4 WebServer VMs.
 
@@ -480,10 +511,6 @@ To take advantage of a scale out web tier, your application needs to be able to 
    - **Cloud** - Nutanix
    - **OS** - Linux
    - **VM Name** - @@{User_initials}@@-HAProxy-@@{calm_array_index}@@
-   - **Image** - CentOS\_7\_Cloud
-   - **Device Type** - Disk
-   - **Device Bus** - SCSI
-   - Select **Bootable**
    - **vCPUs** - 2
    - **Cores per vCPU** - 1
    - **Memory (GiB)** - 4
@@ -500,9 +527,22 @@ To take advantage of a scale out web tier, your application needs to be able to 
              ssh-authorized-keys:
                - @@{CENTOS.public_key}@@
              sudo: ['ALL=(ALL) NOPASSWD:ALL']
+   
+   *Under DISK section:*
+
+   - **Device Type** - Disk
+   - **Device Bus** - SCSI
+   - **Image** - CentOS_7_Cloud
+   - Select **Bootable**
+
+   *Under Network section:*
 
    - Select :fa:`plus-circle` under **Network Adapters (NICs)**
    - **NIC 1** - Primary
+   - **Private IP** - Dynamic
+   
+   *Under Connection section:*
+
    - **Credential** - CENTOS
 
 #. Select the **Package** tab.
@@ -516,6 +556,7 @@ To take advantage of a scale out web tier, your application needs to be able to 
    - **Name Task** - Install_HAProxy
    - **Type** - Execute
    - **Script Type** - Shell
+   - **Endpint (optional)** - Leave default
    - **Credential** - CENTOS
    - **Script** -
 
@@ -571,7 +612,9 @@ To take advantage of a scale out web tier, your application needs to be able to 
        sudo systemctl enable haproxy
        sudo systemctl restart haproxy
 
-   Note the use of the @@{WebServer.address}@@ macro in the script above. The macro returns a comma delimited list of all IPs of the VMs within that service. The script then uses the `tr <https://www.geeksforgeeks.org/tr-command-unixlinux-examples/>`_ command to replace commas with carriage returns. The result is an array, **$hosts**, containing strings of all WebServer IP addresses. Those addresses are then each added to the **HAProxy** configuration file.
+   
+   .. note::
+      Note the use of the **@@{WebServer.address}@@** macro in the script above. The macro returns a comma delimited list of all IPs of the VMs within that service. The script then uses the `tr <https://www.geeksforgeeks.org/tr-command-unixlinux-examples/>`_ command to replace commas with carriage returns. The result is an array, **$hosts**, containing strings of all WebServer IP addresses. Those addresses are then each added to the **HAProxy** configuration file.
 
 #. Select the **Package** tab and click **Configure uninstall**.
 
@@ -643,17 +686,29 @@ Launching and Managing the Application
 
    The **Audit** tab can be used to monitor the deployment of the application.
 
-   Why don't all of the CentOS based services deploy at the same time following the download of the disk image?
+   .. figure:: images/calm3/audit.png
 
-#. Once the application reaches a **Running** status, navigate to the **Services** tab and select the **HAProxy** service to determine the IP address of your load balancer.
+   Why don't all of the CentOS based services deploy at the same time following the download of the disk image? Look at the **Adding Dependencies** part of this module for the answer...
+
+#. Once the application reaches a **Running** status (approx. 20 minutes after you have launched the Blueprint), 
+   
+   .. figure:: images/calm3/running.png
+
+   navigate to the **Services** tab and select the **HAProxy** service to determine the IP address of your load balancer.
+
+   .. figure:: images/calm3/haproxy_svc.png
+
+
 
 #. In a new browser tab or window, navigate to \http://<HAProxy-IP>, and verify your Task Manager application is functioning.
 
    .. note::
 
-     You can also click the link in the Description of the Application.
+     You can also click the link in the Description of the Application. Or click the |applications| icon and click on your application you just created.
 
    .. figure:: images/17.png
+
+------
 
 Takeaways
 +++++++++
@@ -690,5 +745,5 @@ What are the key things you should know about **Nutanix Calm**?
 .. |mkt-icon| image:: ../images/marketplace_icon.png
 .. |bp-icon| image:: ../images/blueprints_icon.png
 .. |blueprints| image:: images/blueprints.png
-.. |applications| image:: images/blueprints.png
+.. |applications| image:: images/applications.png
 .. |projects| image:: images/projects.png
