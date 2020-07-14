@@ -145,7 +145,7 @@ In this exercise, we're going to be creating a custom action for our application
         print "Post request failed", resp.content
         exit(1)
 
-   .. figure:: images/calm3/runtime_post.png
+..   .. figure:: images/calm3/runtime_post.png
 
    There are some new and interesting features of this task:
 
@@ -155,106 +155,106 @@ In this exercise, we're going to be creating a custom action for our application
 
 #. Click **Save**, and ensure no errors or warnings appear.
 
-GetDefaultSubnet Custom Action
-++++++++++++++++++++++++++++++
-
-In this exercise, we're going to create an additional custom action to make a different REST API call. The call will return the list of **Projects** on this Prism Central instance.  We'll then parse the output of that API call to get the UUID of the default subnet configured for the project that the running application belongs to.  This UUID will be set as a Calm variable, allowing for re-use elsewhere in the blueprint.  We'll then do another Rest API call, a GET on the default subnet (utilizing this newly set variable).
-
-#. Select the **PC** service. In the **Configuration Pane**, select the **Service** tab. Add a variable named **SUBNET**, leaving all other fields blank.
-
-   .. figure:: images/calm3/subnet_variable.png
-
-#. In the **Application Overview > Application Profile > Default**, section, select :fa:`plus-circle` next to **Actions** to add a new, custom action.
-
-#. Name the action **GetDefaultSubnet**.
-
-   .. figure:: images/calm3/get_default_subnet.png
-
-#. Click the **+ Task** button to add a task to the **GetDefaultSubnet** custom action.  Fill in the following fields:
-
-   - **Task Name** - GetSubnetUUID
-   - **Type** - Set Variable
-   - **Script Type** - EScript
-   - **Script** - *Script Provided Below*
-   - **Output** - SUBNET
-
-   .. code-block:: python
-
-     # Get the JWT
-     jwt = '@@{calm_jwt}@@'
-
-     # Set the headers, url, and payload
-     headers = {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(jwt)}
-     url     = "https://@@{address}@@:9440/api/nutanix/v3/projects/list"
-     payload = {}
-
-     # Make the request
-     resp = urlreq(url, verb='POST', params=json.dumps(payload), headers=headers, verify=False)
-
-     # If the request went through correctly
-     if resp.ok:
-
-      # Cycle through the project "entities", and check if its name matches the current project
-      for project in json.loads(resp.content)['entities']:
-        if project['spec']['name'] == '@@{calm_project_name}@@':
-
-          # If there's a default subnet reference, print UUID to set variable and exit success, otherwise error out
-          if 'uuid' in project['status']['resources']['default_subnet_reference']:
-            print "SUBNET={0}".format(project['status']['resources']['default_subnet_reference']['uuid'])
-            exit (0)
-          else:
-            print "The '@@{calm_project_name}@@' project does not have a default subnet set."
+..    GetDefaultSubnet Custom Action
+     ++++++++++++++++++++++++++++++
+ 
+      In this exercise, we're going to create an additional custom action to make a different REST API call. The call will return the list of **Projects** on  this Prism Central instance.  We'll then parse the output of that API call to get the UUID of the default subnet configured for the project that the  running application belongs to.  This UUID will be set as a Calm variable, allowing for re-use elsewhere in the blueprint.  We'll then do another Res t API  call, a GET on the default subnet (utilizing this newly set variable). 
+ 
+      #. Select the **PC** service. In the **Configuration Pane**, select the **Service** tab. Add a variable named **SUBNET**, leaving all other fields blank.
+ 
+         .. figure:: images/calm3/subnet_variable.png
+ 
+      #. In the **Application Overview > Application Profile > Default**, section, select :fa:`plus-circle` next to **Actions** to add a new, custom action.
+ 
+      #. Name the action **GetDefaultSubnet**.
+ 
+         .. figure:: images/calm3/get_default_subnet.png
+ 
+      #. Click the **+ Task** button to add a task to the **GetDefaultSubnet** custom action.  Fill in the following fields:
+ 
+         - **Task Name** - GetSubnetUUID
+         - **Type** - Set Variable
+         - **Script Type** - EScript
+         - **Script** - *Script Provided Below*
+         - **Output** - SUBNET
+ 
+         .. code-block:: python
+ 
+           # Get the JWT
+           jwt = '@@{calm_jwt}@@'
+ 
+           # Set the headers, url, and payload
+           headers = {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(jwt)}
+           url     = "https://@@{address}@@:9440/api/nutanix/v3/projects/list"
+           payload = {}
+ 
+           # Make the request
+           resp = urlreq(url, verb='POST', params=json.dumps(payload), headers=headers, verify=False)
+ 
+           # If the request went through correctly
+           if resp.ok:
+ 
+            # Cycle through the project "entities", and check if its name matches the current project
+            for project in json.loads(resp.content)['entities']:
+              if project['spec']['name'] == '@@{calm_project_name}@@':
+ 
+                # If there's a default subnet reference, print UUID to set variable and exit success, otherwise error out
+                if 'uuid' in project['status']['resources']['default_subnet_reference']:
+                  print "SUBNET={0}".format(project['status']['resources']['default_subnet_reference']['uuid'])
+                  exit (0)
+                else:
+                  print "The '@@{calm_project_name}@@' project does not have a default subnet set."
+                  exit(1)
+ 
+            # If we've reached this point in the code, none of our projects matched the calm_project_name macro
+            print "The '@@{calm_project_name}@@' project does not match any of our /projects/list api call."
+            print json.dumps(json.loads(resp.content), indent=4)
+            exit(0)
+ 
+           # In case the request returns an error
+           else:
+            print "Post clusters/list request failed", resp.content
             exit(1)
-
-      # If we've reached this point in the code, none of our projects matched the calm_project_name macro
-      print "The '@@{calm_project_name}@@' project does not match any of our /projects/list api call."
-      print json.dumps(json.loads(resp.content), indent=4)
-      exit(0)
-
-     # In case the request returns an error
-     else:
-      print "Post clusters/list request failed", resp.content
-      exit(1)
-
-   .. figure:: images/calm3/get_subnet_uuid.png
-
-   There are two key differences between the **RESTList** and **GetDefaultSubnet** tasks. The first difference is the use of the **Set Variable** task type. Take note of the **print "SUBNET={0}"** line: Calm will parse output in the format of **variable=value**, and set the variable equal to the value.  In this example, we're printing the variable called **SUBNET** is equal to the UUID of the "default_subnet_reference" field in the initial API call response. In the **Output** field below the Script body, we must paste in the variable name for Calm to set the variable appropriately. The variable must already be defined in the Calm blueprint, whether globally, or in this case, as a variable local to the **PC** service.
-
-   The second difference is that the **PC_Cred** credential was not used to authorize the API call against Prism Central. Instead, we're using a `JSON Web Token <https://en.wikipedia.org/wiki/JSON_Web_Token>`_ provided by the built-in **calm_jwt** macro.
-
-#. Click the **+ Task** button again to add a second task to the **GetDefaultSubnet** custom action.  Fill in the following fields:
-
-   - **Task Name** - GetSubnetInfo
-   - **Type** - Execute
-   - **Script Type** - EScript
-   - **Script** - *Script Provided Below*
-
-   .. code-block:: python
-
-     # Get the JWT
-     jwt = '@@{calm_jwt}@@'
-
-     # Set the headers, url, and payload
-     headers = {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(jwt)}
-     url     = "https://@@{address}@@:9440/api/nutanix/v3/subnets/@@{SUBNET}@@"
-     payload = {}
-
-     # Make the request
-     resp = urlreq(url, verb='GET', params=json.dumps(payload), headers=headers, verify=False)
-
-     # If the request went through correctly, print it out.  Otherwise error out, and print the response.
-     if resp.ok:
-        print json.dumps(json.loads(resp.content), indent=4)
-        exit(0)
-     else:
-        print "Get request failed", resp.content
-        exit(1)
-
-   In this task we're dynamically returning details about the default subnet using a GET API call and the **SUBNET** UUID variable returned by the previous task.
-
-   .. figure:: images/calm3/get_subnet_info.png
-
-#. Click **Save**, and ensure no errors or warnings appear.
+ 
+         .. figure:: images/calm3/get_subnet_uuid.png
+ 
+         There are two key differences between the **RESTList** and **GetDefaultSubnet** tasks. The first difference is the use of the **Set Variable** task  type. Take note of the **print "SUBNET={0}"** line: Calm will parse output in the format of **variable=value**, and set the variable equal to the  value.  In this example, we're printing the variable called **SUBNET** is equal to the UUID of the "default_subnet_reference" field in the initial  API  call response. In the **Output** field below the Script body, we must paste in the variable name for Calm to set the variable appropriately. The  variable must already be defined in the Calm blueprint, whether globally, or in this case, as a variable local to the **PC** service. 
+ 
+         The second difference is that the **PC_Cred** credential was not used to authorize the API call against Prism Central. Instead, we're using a `JSON Web  Token <https://en.wikipedia.org/wiki/JSON_Web_Token>`_ provided by the built-in **calm_jwt** macro. 
+ 
+      #. Click the **+ Task** button again to add a second task to the **GetDefaultSubnet** custom action.  Fill in the following fields:
+ 
+         - **Task Name** - GetSubnetInfo
+         - **Type** - Execute
+         - **Script Type** - EScript
+         - **Script** - *Script Provided Below*
+ 
+         .. code-block:: python
+ 
+           # Get the JWT
+           jwt = '@@{calm_jwt}@@'
+ 
+           # Set the headers, url, and payload
+           headers = {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(jwt)}
+           url     = "https://@@{address}@@:9440/api/nutanix/v3/subnets/@@{SUBNET}@@"
+           payload = {}
+ 
+           # Make the request
+           resp = urlreq(url, verb='GET', params=json.dumps(payload), headers=headers, verify=False)
+ 
+           # If the request went through correctly, print it out.  Otherwise error out, and print the response.
+           if resp.ok:
+              print json.dumps(json.loads(resp.content), indent=4)
+              exit(0)
+           else:
+              print "Get request failed", resp.content
+              exit(1)
+ 
+         In this task we're dynamically returning details about the default subnet using a GET API call and the **SUBNET** UUID variable returned by the  previous task. 
+ 
+         .. figure:: images/calm3/get_subnet_info.png
+ 
+     #. Click **Save**, and ensure no errors or warnings appear.
 
 Running the Custom Actions
 ++++++++++++++++++++++++++
@@ -277,11 +277,11 @@ Running the Custom Actions
 
 #. Run the **RESTList** action again, altering the value to another `Prism Central API entity <https://developer.nutanix.com/reference/prism_central/v3/>`_, such as **images**, **clusters**, **hosts**, or **vms**.
 
-#. Finally, run the **GetDefaultSubnet** action. Expand both the **GetSubnetUUID** and **GetSubnetInfo** tasks, reviewing the output for each task. What is the name and VLAN id of your default subnet?
+.. #. Finally, run the **GetDefaultSubnet** action. Expand both the **GetSubnetUUID** and **GetSubnetInfo** tasks, reviewing the output for each task. What is the name and VLAN id of your default subnet?
 
-   .. figure:: images/GetDefaultSubnet.png
+..   .. figure:: images/GetDefaultSubnet.png
 
-   .. figure:: images/GetDefaultSubnet2.png
+..   .. figure:: images/GetDefaultSubnet2.png
 
 Publishing to the Task Library
 ++++++++++++++++++++++++++++++
@@ -320,7 +320,7 @@ What are the key things you should know about **Nutanix Calm**?
 
 - The task library allows commonly used operations to be written once and reused over and over again.  As time goes on more objects will be integrated into the task library, from Nutanix-provided common tasks to entire service objects
 
-- Calm 2.7 introduced the HTTP task, allowing the most common use of Escript to be more easily implemented (sending API calls)
+- Since Calm version 2.7 there is the HTTP task, allowing the most common use of Escript to be more easily implemented (sending API calls)
 
 - In addition to being able to use Bash and Powershell scripts, Nutanix Calm can use EScript, which is a sandboxed Python interpreter, to provide application lifecycle management.
 

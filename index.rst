@@ -12,8 +12,8 @@
   calm_linux/calm_linux
   calm_win/calm_win
   calm_day2/calm_day2
-  calm_escript/calm_escript
   calm_marketplace/calm_marketplace
+  calm_escript/calm_escript
 
 .. toctree::
   :maxdepth: 2
@@ -62,8 +62,8 @@ Agenda
     - Calm: Linux 3-Tier Application
     - Calm: Windows 2-Tier Application
     - Calm: Day 2 Actions - Scaling Out/In
-    - Calm: eScript
     - Calm: Marketplace
+    - Calm: eScript
 
 - Optional Labs
 
