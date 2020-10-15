@@ -21,7 +21,6 @@
   :name: _optional_labs
   :hidden:
 
-  flow_assign_categories_in_calm/flow_assign_categories_in_calm
 
 .. toctree::
   :maxdepth: 2
